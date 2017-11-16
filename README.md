@@ -5,7 +5,7 @@ Attempt at electron-based, terminal-inspired launcher/utility.
 ## Development Scripts
 
 ```bash
-# run application in development mode
+# run application in development mode & watch files (for live-reload)
 yarn dev
 
 # run application in production mode
