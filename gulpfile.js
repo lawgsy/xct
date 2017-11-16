@@ -48,3 +48,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('default', ['clean', 'typescript', 'copy', 'copy-core', 'copy-plugins'])
+
+
+// NOTE: maybe use electron-connect for live reload instead?
+// http://lukasholoubek.com/configuring-an-electron-development-environment/
