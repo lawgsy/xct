@@ -7,9 +7,10 @@
   "license": "MIT",
   "main": "app/index.js",
   "scripts": {
-    "dev": "set NODE_ENV=development&& gulp && ./node_modules/.bin/electron .",
-    "start": "set NODE_ENV=production&& gulp && ./node_modules/.bin/electron .",
-    "watch": "set NODE_ENV=development&& gulp watch",
+    "dev": "set NODE_ENV=development&& gulp && start gulp watch &&./node_modules/.bin/electron .",
+    "start": "set NODE_ENV=production&& ./node_modules/.bin/electron .",
+    "compile": "gulp",
+    "watch": "gulp watch",
     "pack": "gulp && electron-builder --dir",
     "dist": "gulp && electron-builder"
   },

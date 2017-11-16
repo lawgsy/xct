@@ -14,12 +14,13 @@ import * as config from './config'
 
 
 import * as reload from 'electron-reload'
+
 reload(__dirname, {
-  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+  electron: path.join(__dirname+'/**', 'node_modules', '.bin', 'electron')
 });
-reload(config.MAIN_PLUGIN_REPO, {
-  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-});
+// reload(config.MAIN_PLUGIN_REPO, {
+//   electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+// });
 // require('electron-reload')(__dirname, {
 //   electron: path.join(__dirname+'|'+config.MAIN_PLUGIN_REPO, 'node_modules', '.bin', 'electron')
 // });

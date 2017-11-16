@@ -20,31 +20,31 @@ gulp.task('clean', function () {
              .pipe(clean());
 });
 
-gulp.task('typescript', ['clean'], function () {
+gulp.task('typescript', [], function () {
   return gulp.src(`${bases.src}/**/*.ts`)
              .pipe(ts({ noImplicitAny: false }))
              .pipe(gulp.dest(bases.app));
 });
 
 // Copy all other files to dist directly
-gulp.task('copy', ['clean'], function() {
+gulp.task('copy', [], function() {
   gulp.src(paths.main, {cwd: bases.src})
       .pipe(gulp.dest(bases.app));
 });
-gulp.task('copy-core', ['clean'], function() {
+gulp.task('copy-core', [], function() {
   gulp.src(paths.core, {cwd: bases.src})
       .pipe(gulp.dest(bases.app+'/core'));
 });
-gulp.task('copy-plugins', ['clean'], function() {
+gulp.task('copy-plugins', [], function() {
   gulp.src(paths.plugins, {cwd: bases.src})
       .pipe(gulp.dest(bases.app+'/plugins'));
 });
 
 gulp.task('watch', function() {
-  gulp.watch(`${bases.src}/plugins/**`, ['copy-plugins']);
+  gulp.watch(`${bases.src}/plugins/**/*`, ['copy-plugins']);
   gulp.watch(`${bases.src}/core/**`, ['copy-core']);
-  gulp.watch(`${bases.src}/common/**`, ['clean', 'typescript', 'copy']);
-  gulp.watch(`${bases.src}/*`, ['clean', 'typescript', 'copy']);
+  gulp.watch(`${bases.src}/common/**`, ['typescript', 'copy']);
+  gulp.watch(`${bases.src}/*`, ['typescript', 'copy']);
 });
 
 gulp.task('default', ['clean', 'typescript', 'copy', 'copy-core', 'copy-plugins'])
