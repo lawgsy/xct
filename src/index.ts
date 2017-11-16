@@ -10,20 +10,12 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 import * as path from 'path'
 import * as url from 'url'
 import * as config from './config'
-// var config = require('./config')
-
-
 import * as reload from 'electron-reload'
 
+// TODO: force reload upon changed plugin in config.MAIN_PLUGIN_REPO
 reload(__dirname, {
-  electron: path.join(__dirname+'/**', 'node_modules', '.bin', 'electron')
+  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
 });
-// reload(config.MAIN_PLUGIN_REPO, {
-//   electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-// });
-// require('electron-reload')(__dirname, {
-//   electron: path.join(__dirname+'|'+config.MAIN_PLUGIN_REPO, 'node_modules', '.bin', 'electron')
-// });
 
 function createWindow() {
   mainWindow = new BrowserWindow({width: 800, height: 600})
