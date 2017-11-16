@@ -47,7 +47,7 @@ gulp.task('watch', function() {
   gulp.watch(`${bases.src}/*`, ['typescript', 'copy']);
 });
 
-gulp.task('default', ['clean', 'typescript', 'copy', 'copy-core', 'copy-plugins'])
+gulp.task('default', ['typescript', 'copy', 'copy-core', 'copy-plugins'])
 
 
 // NOTE: maybe use electron-connect for live reload instead?
