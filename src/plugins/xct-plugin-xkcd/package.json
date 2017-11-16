@@ -1,0 +1,17 @@
+{
+  "name": "xct-plugin-xkcd",
+  "version": "0.0.1",
+  "description": "Sample plugin",
+  "main": "index.js",
+  "author": "Lawg",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "xct": {
+    "command": "xkcd",
+    "usage": "xkcd",
+    "example_input": "xkcd",
+    "example_output": "[webview] showing latest xkcd",
+    "symbol": null
+  }
+}

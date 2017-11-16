@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <style media="screen">
+      @import url(https://unpkg.com/spectre.css/dist/spectre.min.css);
+      .empty {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+        position: relative;
+      }
+
+      .footer {
+        bottom: 0;
+        font-size: 13px;
+        left: 50%;
+        opacity: .9;
+        position: absolute;
+        transform: translateX(-50%);
+        width: 100%;
+      }
+
+      webview {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+    </style>
+  </head>
+  <div id="app"></div>
+  <script>require('./renderer/index.js')</script>
+</html>

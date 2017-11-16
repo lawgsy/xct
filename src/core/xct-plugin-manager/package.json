@@ -1,0 +1,17 @@
+{
+  "name": "xct-plugin-manager",
+  "version": "0.0.1",
+  "description": "Plugin manager plugin",
+  "main": "index.ts",
+  "author": "Lawg",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "xct": {
+    "command": null,
+    "usage": null,
+    "example_input": null,
+    "example_output": null,
+    "symbol": null
+  }
+}
