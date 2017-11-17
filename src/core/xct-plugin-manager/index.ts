@@ -1,20 +1,9 @@
 console.log('loading plugin-manager-plugin...')
 
+import config from '../../config'
 
-import * as config from '../../config'
-const path = require('path')
-
-const fse = require('fs-extra')
-
-// const rq = require('electron-require');
-//
-// rq.set({
-//     'plugin': '%{userData}/../../../.xct/plugins'
-// });
-
-// TODO: watch plugins directory with chokidar and reload when necessary
-// const figlet = rq.plugin('xct-plugin-figlet/index.js');
-// const xkcd = rq.plugin('xct-plugin-xkcd/index.js');
+import * as path from 'path'
+import * as fse  from 'fs-extra'
 
 function init() {
   loadPlugins();
@@ -39,7 +28,6 @@ function getPluginPaths(): string[] {
   var files: string[] = []
   for (const repo of config.PLUGIN_REPOS) {
     try {
-      // pluginPerRepo[repo] = fse.readdirSync(repo)
       files = files.concat(
                 fse.readdirSync(repo)
                     .map((pluginDir: string) => path.join(repo, pluginDir)
@@ -69,19 +57,24 @@ function importPluginModule(pluginFile): Function|undefined {
   return PluginModule;
 }
 
-function parsePluginConfig(pluginId, pluginPath) {
-  let pluginConfig: {
-    command?       : string,
-    usage?         : string,
-    example_input? : string,
-    example_output?: string,
-    prefix?        : string,
-    preferences?   : string,
-    path           : string,
-    name           : string,
-    version        : string
+interface pluginCfg {
+  command?       : string,
+  usage?         : string,
+  example_input? : string,
+  example_output?: string,
+  prefix?        : string,
+  preferences?   : string,
+  path           : string,
+  name           : string,
+  version        : string
+}
+
+function parsePluginConfig(pluginId: string, pluginPath: string): pluginCfg {
+  let pluginConfig: pluginCfg = {
+    path: pluginPath,
+    name: pluginId,
+    version: "0.0.0"
   }
-  pluginConfig = { path: pluginPath, name: pluginId, version: "0.0.0" }
   try {
     const packageJson = <any>require(path.join(pluginPath, 'package.json'));
     const prefSchemaPath = path.join(pluginPath, 'preferences.json');
@@ -110,11 +103,11 @@ function loadPlugins() {
       console.error(`conflict: ${pluginPath} is already loaded`);
       continue;
     }
-    const PluginModule = importPluginModule(pluginPath);
-    if (PluginModule === null)
-      continue;
-    const pluginId = path.basename(pluginPath);
-    const pluginConfig = parsePluginConfig(pluginId, pluginPath);
+    const PluginModule: Function|undefined = importPluginModule(pluginPath);
+    if (PluginModule === undefined) continue;
+
+    const pluginId: string = path.basename(pluginPath);
+    const pluginConfig: pluginCfg = parsePluginConfig(pluginId, pluginPath);
   }
 }
 
