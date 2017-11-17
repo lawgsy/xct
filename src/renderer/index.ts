@@ -3,13 +3,14 @@
 import * as Vue from 'vue'
 // import * as Vue from 'vue'
 import {urlencode, webView} from '../common/web-functions'
-// import * as common from '../common/web-functions'
+import * as common from '../common/web-functions'
 //
 
 console.log('Renderer initialized!')
 
 Vue.config.devtools = false
 Vue.config.productionTip = false
+import * as config from './../config'
 
 var vueObj = new Vue({
     el: "#app",
@@ -37,15 +38,18 @@ var vueObj = new Vue({
 
 var unknownCommand = (cmd: string, args: string[]) => `Command '${cmd} ${args.join(' ')}' not found. Available: ${commandList()}`
 
+// import * as figlet from './../plugins/xct-plugin-figlet'
+// import * as xkcd from './../plugins/xct-plugin-xkcd'
 
 var handlers: {
   [index: string] : (...args: string[]) => string
 }
 // var context: any = {};
+// context.common = common
 handlers = {
   'echo': (...args: string[]): string => args.join('<br />'),
-  // 'figlet': (...args: string[]): string => figlet.Plugin(...args),
-  // 'xkcd': (...args: string[]): string => xkcd.Plugin(context, ...args)
+  // 'figlet': (...args: string[]): string => figlet(...args),
+  // 'xkcd': (...args: string[]): string => xkcd(context, ...args)
 }
 
 var symbolHandlers: {
