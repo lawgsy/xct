@@ -5,6 +5,19 @@ import config from '../../config'
 import * as path from 'path'
 import * as fse  from 'fs-extra'
 
+type pluginType = Function | undefined
+interface pluginCfg {
+  command?       : string,
+  usage?         : string,
+  example_input? : string,
+  example_output?: string,
+  prefix?        : string,
+  preferences?   : string,
+  path           : string,
+  name           : string,
+  version        : string
+}
+
 function init() {
   loadPlugins();
 }
@@ -40,7 +53,8 @@ function getPluginPaths(): string[] {
   return files;
 }
 
-function importPluginModule(pluginFile): Function|undefined {
+
+function importPluginModule(pluginFile): pluginType {
   let PluginModule = null;
   try {
     PluginModule = require(pluginFile);
@@ -57,17 +71,7 @@ function importPluginModule(pluginFile): Function|undefined {
   return PluginModule;
 }
 
-interface pluginCfg {
-  command?       : string,
-  usage?         : string,
-  example_input? : string,
-  example_output?: string,
-  prefix?        : string,
-  preferences?   : string,
-  path           : string,
-  name           : string,
-  version        : string
-}
+
 
 function parsePluginConfig(pluginId: string, pluginPath: string): pluginCfg {
   let pluginConfig: pluginCfg = {
@@ -97,21 +101,34 @@ function parsePluginConfig(pluginId: string, pluginPath: string): pluginCfg {
 
 function loadPlugins() {
   const pluginPaths = getPluginPaths();
-  var loadedPlugins: {[index:string]: any} = {}//: any = {};
+  var loadedPlugins: {
+    [index: string]: pluginType
+  } = {}
+  var loadedPluginConfigs: {
+    [index: string]: pluginCfg
+  } = {}
   for (var pluginPath of pluginPaths) {
     if (pluginPath in loadedPlugins) {
       console.error(`conflict: ${pluginPath} is already loaded`);
       continue;
     }
-    const PluginModule: Function|undefined = importPluginModule(pluginPath);
-    if (PluginModule === undefined) continue;
+    const pluginModule: pluginType = importPluginModule(pluginPath);
+    if (pluginModule === undefined) continue;
 
     const pluginId: string = path.basename(pluginPath);
     const pluginConfig: pluginCfg = parsePluginConfig(pluginId, pluginPath);
+
+    try {
+      loadedPlugins[pluginId] = pluginModule;
+      loadedPluginConfigs[pluginId] = pluginConfig;
+      console.debug(`${pluginId} loaded (definitely)`);
+    } catch (e) {
+      console.error(`${pluginId} could'nt be created: ${e.stack || e}`);
+    }
   }
 }
 
-console.log('loaded plugin-manager-plugin!')
+console.debug('loaded plugin-manager-plugin!')
 
 
 module.exports = {
