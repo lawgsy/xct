@@ -2,11 +2,11 @@
 
 import * as Vue from 'vue'
 // import * as Vue from 'vue'
-import {urlencode, webView} from '../common/web-functions'
-import * as common from '../common/web-functions'
+// import {urlencode, webView} from '../common/web-functions'
+import * as webUtils from '../common/web-utils'
 //
 
-console.log('Renderer initialized!')
+// console.log('Renderer initialized!')
 
 Vue.config.devtools = false
 Vue.config.productionTip = false
@@ -42,7 +42,7 @@ var unknownCommand = (cmd: string, args: string[]) => `Command '${cmd} ${args.jo
 // import * as xkcd from './../plugins/xct-plugin-xkcd'
 
 var handlers: {
-  [index: string] : (...args: string[]) => string
+  [index: string] : (context: Object, ...args: string[]) => string
 }
 // var context: any = {};
 // context.common = common
@@ -61,8 +61,8 @@ symbolHandlers = {
   '?': {
     'g':
       (...args: string[]): string => {
-        var query = urlencode(args.join(' '));
-        return webView(`https://www.google.nl/search?q=${query}`);
+        var query = webUtils.urlencode(args.join(' '));
+        return webUtils.webView(`https://www.google.nl/search?q=${query}`);
       }
     //, 'xkcd': (...args: string[]): string => common.webView(`https://m.xkcd.com/`)
   }
@@ -76,8 +76,9 @@ function commandList(): string {
 }
 
 function handleCmd(cmd: string|undefined, args: string[]) {
+  var context = {webUtils: webUtils}
   if (cmd==undefined) return unknownCommand("", args);
-  if(cmd in handlers) return handlers[cmd](...args)
+  if(cmd in handlers) return handlers[cmd](context, ...args)
   else if(cmd[0] in symbolHandlers) {
     var symbol = cmd[0];
     cmd = cmd.substr(1);
@@ -96,31 +97,39 @@ function handleCmd(cmd: string|undefined, args: string[]) {
 page logic
  */
 
- document.addEventListener("DOMContentLoaded", function(event) {
-   var inputElement = document.getElementById('cmdInput');
-   var submitElement = document.getElementById('submitBtn');
+document.addEventListener("DOMContentLoaded", function(event) {
+  var inputElement = document.getElementById('cmdInput');
+  var submitElement = document.getElementById('submitBtn');
 
-   // bind events
-   if(inputElement) {
-     inputElement.focus();
+  // bind events
+  if(inputElement) {
+    inputElement.focus();
 
-     inputElement.onkeypress = (e) => {
-       if (e==undefined) e = <KeyboardEvent>window.event;
-       var keyCode = e.keyCode || e.which;
-       if (keyCode == 13) handleInput();
-     }
-   }
-   if(submitElement) submitElement.onclick = () => { handleInput() }
- });
+    inputElement.onkeypress = (e) => {
+      if (e==undefined) e = <KeyboardEvent>window.event;
+      var keyCode = e.keyCode || e.which;
+      if (keyCode == 13) handleInput();
+    }
+  }
+  if(submitElement) submitElement.onclick = () => { handleInput() }
+});
 
- function handleInput(): void {
-   var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
-   var input: string[] = [];
-   if(inputElement) input = inputElement.value.split(' ');
+function handleInput(): void {
+  var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
+  var input: string[] = [];
+  if(inputElement) input = inputElement.value.split(' ');
 
-   vueObj.output = handleCmd(input.shift(), input);
- };
+  vueObj.output = handleCmd(input.shift(), input);
+};
 
 
- var pluginManager = require('../core/xct-plugin-manager/index.js')
- pluginManager.init()
+var pluginManager = require('../core/xct-plugin-manager/index.js')
+var {loadedPlugins, loadedPluginConfigs} = pluginManager.loadPlugins()
+
+for(const pId in loadedPluginConfigs) {
+  var pConfig = loadedPluginConfigs[pId];
+  if(pConfig["command"] != "") {
+    handlers[pConfig["command"]] = loadedPlugins[pId];
+    console.log(`loaded '${pId}' with command '${pConfig["command"]}'`)
+  }
+}

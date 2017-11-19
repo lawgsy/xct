@@ -1,11 +1,10 @@
-console.log('loading plugin-manager-plugin...')
+console.log('Initialized plugin-manager-plugin')
 
 import config from '../../config'
 
 import * as path from 'path'
 import * as fse  from 'fs-extra'
 
-type pluginType = Function | undefined
 interface pluginCfg {
   command?         : string,
   usage?           : string,
@@ -16,10 +15,6 @@ interface pluginCfg {
   readonly path    : string,
   readonly name    : string,
   readonly version : string
-}
-
-function init() {
-  loadPlugins();
 }
 
 /**
@@ -51,33 +46,36 @@ function getPluginPaths(): string[] {
   return files;
 }
 
-
-function importPluginModule(pluginFile): pluginType {
+/**
+ * Return plugin as function, if available
+ * @param  {string}   pluginPath File path to plugin
+ * @return {Function}            Plugin module
+ */
+function importPluginModule(pluginPath: string): Function | undefined {
   let PluginModule = null;
   try {
-    PluginModule = require(pluginFile);
+    PluginModule = require(pluginPath);
   } catch (e) {
-    console.error(`error on loading: ${pluginFile}`);
+    console.error(`error on loading: ${pluginPath}`);
     console.error(e.stack);
     return undefined;
   }
 
   if (typeof PluginModule !== "function") {
-    console.error(`plugin not function: ${pluginFile}`);
+    console.error(`plugin not function: ${pluginPath}`);
     return undefined;
   }
   return PluginModule;
 }
 
-
-
+/**
+ * Parse and return package.json of given plugin path as pluginCfg object
+ * @param  {string}    pluginId   Unique plugin ID (directory name)
+ * @param  {string}    pluginPath File path to plugin
+ * @return {pluginCfg}            See interface at top of this file
+ */
 function parsePluginConfig(pluginId: string, pluginPath: string): pluginCfg {
   let pluginConfig: pluginCfg
-  // = {
-  //   path: pluginPath,
-  //   name: pluginId,
-  //   version: "0.0.0"
-  // }
   try {
     const packageJson = <any>require(path.join(pluginPath, 'package.json'));
 
@@ -95,16 +93,20 @@ function parsePluginConfig(pluginId: string, pluginPath: string): pluginCfg {
     if (fse.existsSync(prefSchemaPath))
       pluginConfig.preferences = preferences;
   } catch (e) {
-    console.error(`error on loading ${pluginId} config`, e);
+    console.error(`error on loading ${pluginId} configuration`, e);
     return null;
   }
   return pluginConfig;
 }
 
-function loadPlugins(): { [index: string]: pluginType } {
+/**
+ * Load all plugins from all repositories defined in src/config.ts
+ * @return {loadedPlugins, loadedPluginConfigs} [description]
+ */
+function loadPlugins() {
   const pluginPaths = getPluginPaths();
   var loadedPlugins: {
-    [index: string]: pluginType
+    [index: string]: Function
   } = {}
   var loadedPluginConfigs: {
     [index: string]: pluginCfg
@@ -114,7 +116,7 @@ function loadPlugins(): { [index: string]: pluginType } {
       console.error(`conflict: ${pluginPath} is already loaded`);
       continue;
     }
-    const pluginModule: pluginType = importPluginModule(pluginPath);
+    const pluginModule: Function|undefined = importPluginModule(pluginPath);
     if (pluginModule === undefined) continue;
 
     const pluginId: string = path.basename(pluginPath);
@@ -128,13 +130,9 @@ function loadPlugins(): { [index: string]: pluginType } {
       console.error(`${pluginId} could'nt be created: ${e.stack || e}`);
     }
   }
-  return loadedPlugins;
+  return {loadedPlugins, loadedPluginConfigs};
 }
 
-console.debug('loaded plugin-manager-plugin!')
-
-
 module.exports = {
-  init: init
-  //, loadPlugins: loadPlugins
+  loadPlugins: loadPlugins
 }
