@@ -1,0 +1,18 @@
+{
+  "name": "xct-plugin-xkcd",
+  "version": "0.0.1",
+  "description": "Sample plugin",
+  "main": "index.js",
+  "author": "Lawg",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "xct": {
+    "command": "pbs",
+    "usage": "pbs",
+    "example_input": "pbs",
+    "example_output": "[webview] showing latest pearlsbeforeswine",
+    "symbol": null,
+    "live": false
+  }
+}
