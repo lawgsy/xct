@@ -12,6 +12,7 @@
     "usage": "xkcd",
     "example_input": "xkcd",
     "example_output": "[webview] showing latest xkcd",
-    "symbol": null
+    "symbol": null,
+    "live": false
   }
 }

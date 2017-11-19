@@ -29,7 +29,6 @@ var vueObj = new Vue({
   </div>
   <div class="divider-vert" data-content="OUTPUT" v-if="output" style="position:relative"></div>
   <div v-if="output" id="output" v-html="output"></div>
-
 </div>`
 })
 // window['vueObj'] = vueObj
@@ -41,9 +40,13 @@ var unknownCommand = (cmd: string, args: string[]) => `Command '${cmd} ${args.jo
 // import * as figlet from './../plugins/xct-plugin-figlet'
 // import * as xkcd from './../plugins/xct-plugin-xkcd'
 
+var isLiveHandler: {
+  [index: string] : boolean
+}
 var handlers: {
   [index: string] : (context: Object, ...args: string[]) => string
 }
+isLiveHandler = {}
 // var context: any = {};
 // context.common = common
 handlers = {
@@ -74,21 +77,29 @@ function commandList(): string {
            .map(s => s+Object.keys(symbolHandlers[s.toString()]).join(', '+s))
          }`
 }
+var context = {vueObj, webUtils: webUtils}
 
-function handleCmd(cmd: string|undefined, args: string[]) {
-  var context = {webUtils: webUtils}
-  if (cmd==undefined) return unknownCommand("", args);
-  if(cmd in handlers) return handlers[cmd](context, ...args)
-  else if(cmd[0] in symbolHandlers) {
-    var symbol = cmd[0];
-    cmd = cmd.substr(1);
-    if(cmd in symbolHandlers[symbol])
-      return symbolHandlers[symbol][cmd](...args)
+function handleCmd(cmd: string|undefined, args: string[], isSubmit: boolean) {
+  if(isSubmit) {
+    if (cmd==undefined) return unknownCommand("", args);
+    if(cmd in handlers) return handlers[cmd](context, ...args)
+    else if(cmd[0] in symbolHandlers) {
+      var symbol = cmd[0];
+      cmd = cmd.substr(1);
+      if(cmd in symbolHandlers[symbol])
+        return symbolHandlers[symbol][cmd](...args)
+
+      return unknownCommand(cmd, args);
+    }
 
     return unknownCommand(cmd, args);
+  } else {
+    // console.log("not submit",cmd,args)
+    var result = undefined;
+    if(cmd in handlers && isLiveHandler[cmd])
+      return handlers[cmd](context, ...args)
+    // if(result) return result;
   }
-
-  return unknownCommand(cmd, args);
 }
 
 
@@ -100,26 +111,39 @@ page logic
 document.addEventListener("DOMContentLoaded", function(event) {
   var inputElement = document.getElementById('cmdInput');
   var submitElement = document.getElementById('submitBtn');
+  var isSubmit: boolean = false;
 
   // bind events
   if(inputElement) {
     inputElement.focus();
 
-    inputElement.onkeypress = (e) => {
+    // inputElement.onkeypress = (e) => {
+    inputElement.onkeyup = (e) => {
+      isSubmit = false;
       if (e==undefined) e = <KeyboardEvent>window.event;
       var keyCode = e.keyCode || e.which;
-      if (keyCode == 13) handleInput();
+      if (keyCode == 13) {
+        isSubmit = true;
+        // handleInput(isSubmit);
+      }
+      handleInput(isSubmit);
+
     }
   }
-  if(submitElement) submitElement.onclick = () => { handleInput() }
+  if(submitElement) submitElement.onclick = () => {
+    var isSubmit: boolean = true;
+    handleInput(isSubmit)
+  }
 });
 
-function handleInput(): void {
+function handleInput(isSubmit: boolean): void {
   var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
   var input: string[] = [];
   if(inputElement) input = inputElement.value.split(' ');
 
-  vueObj.output = handleCmd(input.shift(), input);
+  // vueObj.output = handleCmd(input.shift(), input, isSubmit);
+  handleCmd(input.shift(), input, isSubmit);
+  //
 };
 
 
@@ -130,6 +154,7 @@ for(const pId in loadedPluginConfigs) {
   var pConfig = loadedPluginConfigs[pId];
   if(pConfig["command"] != "") {
     handlers[pConfig["command"]] = loadedPlugins[pId];
+    isLiveHandler[pConfig["command"]] = pConfig["live"];
     console.log(`loaded '${pId}' with command '${pConfig["command"]}'`)
   }
 }

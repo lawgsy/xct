@@ -1,2 +1,4 @@
 module.exports =
-  ({webUtils}, ...args) => webUtils.webView(`https://m.xkcd.com/`)
+  ({vueObj, webUtils}, ...args) => {
+    vueObj.output = webUtils.webView(`https://m.xkcd.com/`)
+  }

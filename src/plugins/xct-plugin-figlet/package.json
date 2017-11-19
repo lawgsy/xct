@@ -13,6 +13,7 @@
     "usage": "figlet '''text goes here'''",
     "example_input": "figlet hi",
     "example_output": "",
-    "symbol": null
+    "symbol": null,
+    "live": true
   }
 }
