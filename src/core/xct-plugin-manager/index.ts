@@ -135,6 +135,6 @@ function loadPlugins() {
   return {loadedPlugins, loadedPluginConfigs};
 }
 
-module.exports = {
-  loadPlugins: loadPlugins
+export {
+  loadPlugins
 }

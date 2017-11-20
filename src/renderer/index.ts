@@ -13,6 +13,11 @@ import * as config from './../config'
 
 import {clipboard} from 'electron'
 
+// var pluginManager = require('../core/xct-plugin-manager/index.js')
+import * as pluginManager from './../core/xct-plugin-manager'
+import * as xctMath from './../core/xct-plugin-math'
+
+
 var vueObj = new Vue({
     el: "#app",
     data: {
@@ -72,7 +77,7 @@ var handlers: {
   // [index: string] : (context: Object, ...args: string[]) => string
   [index: string] : {
     'pattern': string,
-    'func': (context: Object, input: string) => any,
+    'func': Function,//(context: Object, input: string) => any,
     'live': boolean,
     'usage': string,
     'description': string
@@ -151,7 +156,8 @@ function handleCmd(input: string, isSubmit: boolean) {
         return true;
       }
     }
-    return false;
+    xctMath(context, input);
+    // return false;
   }
 }
 
@@ -200,7 +206,6 @@ function handleInput(isSubmit: boolean): void {
 
 // TODO: perform plugin loading in main process rather than Renderer
 // TODO: perform check if a command already belongs to another plugin (overloading is probably a bad idea)
-var pluginManager = require('../core/xct-plugin-manager/index.js')
 var {loadedPlugins, loadedPluginConfigs} = pluginManager.loadPlugins()
 
 for(const pId in loadedPluginConfigs) {

@@ -6,10 +6,11 @@
   "author": "Lawg",
   "license": "MIT",
   "dependencies": {
+    "mathjs": "^3.17.0",
     "qrcode": "^1.0.0"
   },
   "xct": {
-    "command": "^[-+/*\\d\\s,\\.\\( )]+$",
+    "command": "^.*x$",
     "usage": "**equation**",
     "example_input": "qrcode hello",
     "example_output": "",
