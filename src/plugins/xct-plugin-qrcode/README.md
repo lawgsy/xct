@@ -1,3 +1,3 @@
-# xct-test-plugin
+# xct-plugin-qrcode
 
-A test plugin for xct
+Generate QRcode from input text using [qrcode NPM package](https://www.npmjs.com/package/qrcode)

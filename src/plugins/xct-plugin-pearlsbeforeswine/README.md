@@ -1,3 +1,3 @@
-# xct-test-plugin
+# xct-plugin-pearlsbeforeswine
 
-A test plugin for xct
+Load current Pearls Before Swine comic in output window

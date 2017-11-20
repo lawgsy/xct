@@ -1,3 +1,3 @@
-# xct-test-plugin
+# xct-plugin-figlet
 
-A test plugin for xct
+Display input text as ASCII art using [figlet NPM package](https://www.npmjs.com/package/figlet).

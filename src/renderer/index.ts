@@ -108,6 +108,11 @@ symbolHandlers = {
       (...args: string[]): string => {
         var query = common.webUtils.urlEncode(args.join(' '));
         return common.webUtils.webView(`https://www.google.nl/search?q=${query}`);
+      },
+    'w':
+      (...args: string[]): string => {
+        var query = common.webUtils.urlEncode(args.join(' '));
+        return common.webUtils.webView(`http://m.wolframalpha.com/input/?i=${query}`);
       }
     //, 'xkcd': (...args: string[]): string => common.webView(`https://m.xkcd.com/`)
   }

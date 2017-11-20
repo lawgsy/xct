@@ -1,3 +1,3 @@
-# xct-test-plugin
+# xct-plugin-localfiletest
 
-A test plugin for xct
+Display local HTML file

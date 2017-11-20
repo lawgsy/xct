@@ -1,0 +1,19 @@
+{
+  "name": "xct-plugin-wolframalpha",
+  "version": "0.0.1",
+  "description": "Query wolfram alpha",
+  "main": "index.js",
+  "author": "Lawg",
+  "license": "MIT",
+  "dependencies": {
+    "qrcode": "^1.0.0"
+  },
+  "xct": {
+    "command": "^\\?w .*$",
+    "usage": "**?w** *query*",
+    "example_input": "?w 1+2",
+    "example_output": "",
+    "symbol": null,
+    "live": false
+  }
+}

@@ -1,3 +1,3 @@
-# xct-test-plugin
+# xct-plugin-xkcd
 
-A test plugin for xct
+Load current XKCD comic in output window

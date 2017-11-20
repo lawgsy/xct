@@ -1,0 +1,19 @@
+{
+  "name": "xct-plugin-math",
+  "version": "0.0.1",
+  "description": "Simple math equation detection.",
+  "main": "index.js",
+  "author": "Lawg",
+  "license": "MIT",
+  "dependencies": {
+    "qrcode": "^1.0.0"
+  },
+  "xct": {
+    "command": "^[-+/*\\d\\s,\\.\\( )]+$",
+    "usage": "**equation**",
+    "example_input": "qrcode hello",
+    "example_output": "",
+    "symbol": null,
+    "live": true
+  }
+}

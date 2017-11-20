@@ -1,3 +1,3 @@
-# xct-test-plugin
+# xct-plugin-externallink
 
-A test plugin for xct
+Load URL in default browser
