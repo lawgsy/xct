@@ -1,17 +1,17 @@
 {
   "name": "xct-plugin-ext",
   "version": "0.0.1",
-  "description": "Sample plugin",
+  "description": "Open hardcoded external link in default browser",
   "main": "index.js",
   "author": "Lawg",
   "license": "MIT",
   "dependencies": {
   },
   "xct": {
-    "command": "ext",
-    "usage": "ext",
+    "command": "^ext$",
+    "usage": "**ext**",
     "example_input": "ext",
-    "example_output": "Open external link in default browser",
+    "example_output": "",
     "symbol": null,
     "live": false
   }

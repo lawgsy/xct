@@ -45,6 +45,10 @@ gulp.task('watch', function() {
   // gulp.watch(`${bases.src}/core/**`, ['typescript', 'copy-core']);
   // gulp.watch(`${bases.src}/common/**`, ['typescript', 'copy']);
   gulp.watch(`${bases.src}/**/*.ts`, ['typescript', 'copy']);
+  gulp.watch([
+    `${bases.src}/**/*.html`,
+    `${bases.src}/**/*.json`
+  ], ['copy']);
 });
 
 gulp.task('default', ['typescript', 'copy', 'copy-core', 'copy-plugins'])

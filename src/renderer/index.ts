@@ -1,7 +1,11 @@
 'use strict'
 
 import * as Vue from 'vue'
-import { webUtils } from '../common'
+import * as md from 'markdown'
+const markdown = md.markdown
+import * as parse from 'yargs-parser'
+
+import common from '../common'
 
 Vue.config.devtools = false
 Vue.config.productionTip = false
@@ -27,7 +31,8 @@ var vueObj = new Vue({
 </div>`
 })
 
-var unknownCommand = (cmd: string, args: string[]) => `Command '${cmd} ${args.join(' ')}' not found. Available: ${commandList()}`
+var unknownCommand =
+  (input) => `Command '${input}' not found. Available:<br />${commandList()}`
 
 // import * as figlet from './../plugins/xct-plugin-figlet'
 // import * as xkcd from './../plugins/xct-plugin-xkcd'
@@ -36,13 +41,30 @@ var isLiveHandler: {
   [index: string] : boolean
 }
 var handlers: {
-  [index: string] : (context: Object, ...args: string[]) => string
+  // [index: string] : (context: Object, ...args: string[]) => string
+  [index: string] : {
+    'pattern': string,
+    'func': (context: Object, input: string) => any,
+    'live': boolean,
+    'usage': string,
+    'description': string
+  }
 }
-isLiveHandler = {}
-// var context: any = {};
-// context.common = common
+
+var context = {
+  vueObj: vueObj,
+  common: common,
+  markdown: markdown,
+  parse: parse
+};
 handlers = {
-  'echo': (...args: string[]): string => args.join('<br />'),
+  'echo': {
+    'pattern': '^echo .*',
+    'func': (_, s: string) => { vueObj.output = common.parseInput(s).input },
+    'live': true,
+    'usage': `**echo** text`,
+    'description': 'Echo text back as output'
+  }
   // 'figlet': (...args: string[]): string => figlet(...args),
   // 'xkcd': (...args: string[]): string => xkcd(context, ...args)
 }
@@ -56,41 +78,47 @@ symbolHandlers = {
   '?': {
     'g':
       (...args: string[]): string => {
-        var query = webUtils.urlEncode(args.join(' '));
-        return webUtils.webView(`https://www.google.nl/search?q=${query}`);
+        var query = common.webUtils.urlEncode(args.join(' '));
+        return common.webUtils.webView(`https://www.google.nl/search?q=${query}`);
       }
     //, 'xkcd': (...args: string[]): string => common.webView(`https://m.xkcd.com/`)
   }
 }
 
+// TODO: generate/make commands from regexes instead of using handlers
 function commandList(): string {
-  return `${Object.keys(handlers).join(', ')}, `+
-         `${Object.keys(symbolHandlers)
-           .map(s => s+Object.keys(symbolHandlers[s.toString()]).join(', '+s))
-         }`
+  var cmds: string[] = Object.keys(handlers).map(
+    pId => `<div>
+${markdown.toHTML(handlers[pId]['usage'])}
+→ ${markdown.toHTML(handlers[pId]['description'])}
+</div>`
+  );
+  return cmds.join('');
+  // return `${cmds.join('<br />')} <br /><br />Symbols:<br />`+
+  //        `${Object.keys(symbolHandlers)
+  //          .map(s => s+Object.keys(symbolHandlers[s.toString()]).join(', '+s))
+  //        }`
 }
-var context = {vueObj, webUtils: webUtils}
 
-function handleCmd(cmd: string|undefined, args: string[], isSubmit: boolean) {
+function handleCmd(input: string, isSubmit: boolean) {
   if(isSubmit) {
-    if (cmd==undefined) return unknownCommand("", args);
-    if(cmd in handlers) return handlers[cmd](context, ...args)
-    else if(cmd[0] in symbolHandlers) {
-      var symbol = cmd[0];
-      cmd = cmd.substr(1);
-      if(cmd in symbolHandlers[symbol])
-        return symbolHandlers[symbol][cmd](...args)
-
-      return unknownCommand(cmd, args);
+    for(const pId in handlers) {
+      if(input.match(handlers[pId].pattern)) {
+        handlers[pId].func(context, input);
+        return true;
+      }
     }
 
-    return unknownCommand(cmd, args);
+    context.vueObj.output = unknownCommand(input);
+    return false;
   } else {
-    // console.log("not submit",cmd,args)
-    var result = undefined;
-    if(cmd in handlers && isLiveHandler[cmd])
-      return handlers[cmd](context, ...args)
-    // if(result) return result;
+    for(const pId in handlers) {
+      if(handlers[pId].live && input.match(handlers[pId].pattern)) {
+        handlers[pId].func(context, input);
+        return true;
+      }
+    }
+    return false;
   }
 }
 
@@ -109,17 +137,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   if(inputElement) {
     inputElement.focus();
 
-    // inputElement.onkeypress = (e) => {
     inputElement.onkeyup = (e) => {
       isSubmit = false;
       if (e==undefined) e = <KeyboardEvent>window.event;
       var keyCode = e.keyCode || e.which;
       if (keyCode == 13) {
         isSubmit = true;
-        // handleInput(isSubmit);
       }
       handleInput(isSubmit);
-
     }
   }
   if(submitElement) submitElement.onclick = () => {
@@ -130,12 +155,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 function handleInput(isSubmit: boolean): void {
   var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
-  var input: string[] = [];
-  if(inputElement) input = inputElement.value.split(' ');
-
-  // vueObj.output = handleCmd(input.shift(), input, isSubmit);
-  handleCmd(input.shift(), input, isSubmit);
-  //
+  if(inputElement) handleCmd(inputElement.value, isSubmit);
 };
 
 // TODO: perform plugin loading in main process rather than Renderer
@@ -146,8 +166,13 @@ var {loadedPlugins, loadedPluginConfigs} = pluginManager.loadPlugins()
 for(const pId in loadedPluginConfigs) {
   var pConfig = loadedPluginConfigs[pId];
   if(pConfig["command"] != "") {
-    handlers[pConfig["command"]] = loadedPlugins[pId];
-    isLiveHandler[pConfig["command"]] = pConfig["live"];
+    handlers[pId] = {
+      pattern: pConfig["command"],
+      func: loadedPlugins[pId],
+      live: pConfig["live"],
+      usage: pConfig["usage"],
+      description: pConfig["description"]
+    };
     console.log(`loaded '${pId}' with command '${pConfig["command"]}'`)
   }
 }

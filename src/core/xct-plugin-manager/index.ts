@@ -12,6 +12,7 @@ interface pluginCfg {
   example_output?  : string,
   prefix?          : string,
   preferences?     : string,
+  description      : string,
   readonly path    : string,
   readonly name    : string,
   readonly version : string
@@ -82,11 +83,12 @@ function parsePluginConfig(pluginId: string, pluginPath: string): pluginCfg {
     pluginConfig = {
       path: pluginPath,
       name: packageJson.name,
-      version: packageJson.version
+      version: packageJson.version,
+      description: packageJson.description
     }
 
     const xctProps = packageJson.xct;
-    if (xctProps) pluginConfig = xctProps;
+    if (xctProps) pluginConfig = (<any>Object).assign(xctProps, pluginConfig);
 
     const prefSchemaPath = path.join(pluginPath, 'preferences.json');
     let preferences = undefined;

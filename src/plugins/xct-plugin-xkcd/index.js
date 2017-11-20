@@ -1,4 +1,4 @@
 module.exports =
-  ({vueObj, webUtils}, ...args) => {
-    vueObj.output = webUtils.webView(`https://m.xkcd.com/`)
+  ({vueObj, common}, ...args) => {
+    vueObj.output = common.webUtils.webView(`https://m.xkcd.com/`)
   }

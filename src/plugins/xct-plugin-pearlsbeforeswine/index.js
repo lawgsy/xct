@@ -1,3 +1,3 @@
 module.exports =
-  ({vueObj, webUtils}, ...args) =>
-    vueObj.output = webUtils.webView(`http://www.gocomics.com/pearlsbeforeswine`)
+  ({vueObj, common}, ...args) =>
+    vueObj.output = common.webUtils.webView(`http://www.gocomics.com/pearlsbeforeswine`)

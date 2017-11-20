@@ -1,17 +1,17 @@
 {
   "name": "xct-plugin-xkcd",
   "version": "0.0.1",
-  "description": "Sample plugin",
+  "description": "Load current Pearls Before Swine comic in output window",
   "main": "index.js",
   "author": "Lawg",
   "license": "MIT",
   "dependencies": {
   },
   "xct": {
-    "command": "pbs",
-    "usage": "pbs",
+    "command": "^pbs$",
+    "usage": "**pbs**",
     "example_input": "pbs",
-    "example_output": "[webview] showing latest pearlsbeforeswine",
+    "example_output": "",
     "symbol": null,
     "live": false
   }

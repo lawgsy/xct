@@ -2,8 +2,8 @@ const path = require('path')
 const url = require('url')
 
 module.exports =
-  ({vueObj, webUtils}, ...args) =>
-    vueObj.output = webUtils.webView(url.format({
+  ({vueObj, common}, ...args) =>
+    vueObj.output = common.webUtils.webView(url.format({
       pathname: path.join(__dirname, 'index.html'),
       protocol: 'file:',
       slashes: true

@@ -1,7 +1,7 @@
 {
   "name": "xct-plugin-qrcode",
   "version": "0.0.1",
-  "description": "Sample plugin",
+  "description": "Generate QRcode from input text using [qrcode NPM package](https://www.npmjs.com/package/qrcode)",
   "main": "index.js",
   "author": "Lawg",
   "license": "MIT",
@@ -9,10 +9,10 @@
     "qrcode": "^1.0.0"
   },
   "xct": {
-    "command": "qrcode",
-    "usage": "qrcode",
-    "example_input": "qrcode",
-    "example_output": "generate qrcode",
+    "command": "^qrcode .+",
+    "usage": "**qrcode** _text_",
+    "example_input": "qrcode hello",
+    "example_output": "",
     "symbol": null,
     "live": true
   }

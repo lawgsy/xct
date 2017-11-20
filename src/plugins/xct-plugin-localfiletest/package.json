@@ -1,17 +1,17 @@
 {
   "name": "xct-plugin-localfiletest",
   "version": "0.0.1",
-  "description": "Sample plugin",
+  "description": "Display local HTML file",
   "main": "index.js",
   "author": "Lawg",
   "license": "MIT",
   "dependencies": {
   },
   "xct": {
-    "command": "local",
-    "usage": "local",
+    "command": "^local$",
+    "usage": "**local**",
     "example_input": "local",
-    "example_output": "[webview] showing local file",
+    "example_output": "",
     "symbol": null,
     "live": false
   }

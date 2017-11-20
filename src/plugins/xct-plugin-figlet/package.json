@@ -1,7 +1,7 @@
 {
   "name": "xct-plugin-figlet",
   "version": "0.0.1",
-  "description": "Sample plugin",
+  "description": "Display input text as ASCII art using [figlet NPM package](https://www.npmjs.com/package/figlet). Font type is optional, type 'figlet help' for more information",
   "main": "index.js",
   "author": "Lawg",
   "license": "MIT",
@@ -9,8 +9,8 @@
     "figlet": "^1.2.0"
   },
   "xct": {
-    "command": "figlet",
-    "usage": "figlet '''text goes here'''",
+    "command": "^figlet .*",
+    "usage": "**figlet** _[font]_ text",
     "example_input": "figlet hi",
     "example_output": "",
     "symbol": null,
