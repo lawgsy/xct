@@ -11,6 +11,8 @@ Vue.config.devtools = false
 Vue.config.productionTip = false
 import * as config from './../config'
 
+import {clipboard} from 'electron'
+
 var vueObj = new Vue({
     el: "#app",
     data: {
@@ -18,7 +20,29 @@ var vueObj = new Vue({
             electron: process.versions.electron,
             // electronWebpack: require('electron-webpack/package.json').version
         },
-        output: ""
+        testVar: "test string",
+        output: "",
+        output_raw: "",
+        msg: "",
+        msgShowFunc: null
+    },
+    methods: {
+      notify: (text: string) => {
+        var x = document.getElementById("snackbar")
+        vueObj.msg = text
+
+        if(vueObj.msgShowFunc != null) {
+          clearTimeout(vueObj.msgShowFunc);
+          vueObj.msgShowFunc = null;
+        }
+
+        x.className = "show";
+        vueObj.msgShowFunc = setTimeout(function(){
+          x.className = x.className.replace("show", "");
+          vueObj.msg = "";
+          vueObj.msgShowFunc = null;
+        }, 3000);
+      }
     },
     template: `
 <div>
@@ -28,8 +52,12 @@ var vueObj = new Vue({
   </div>
   <div class="divider-vert" data-content="OUTPUT" v-if="output" style="position:relative"></div>
   <div v-if="output" id="output" v-html="output"></div>
+  <div id="snackbar" v-html="msg"></div>
 </div>`
-})
+});
+// <button class="btn btn-primary input-group-btn col-2" id="copyBtn">Copy output</button>
+
+(<any>window).vueObj = vueObj; // not a very nice hack to access vueObj.notify through window.vueObj.notify
 
 var unknownCommand =
   (input) => `Command '${input}' not found. Available:<br />${commandList()}`
@@ -131,6 +159,7 @@ page logic
 document.addEventListener("DOMContentLoaded", function(event) {
   var inputElement = document.getElementById('cmdInput');
   var submitElement = document.getElementById('submitBtn');
+  var copyElement = document.getElementById('copyBtn');
   var isSubmit: boolean = false;
 
   // bind events
@@ -150,6 +179,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
   if(submitElement) submitElement.onclick = () => {
     var isSubmit: boolean = true;
     handleInput(isSubmit)
+  }
+  if(copyElement) copyElement.onclick = () => {
+    if(vueObj.output != "" && vueObj.output_raw != "") {
+      clipboard.writeText(vueObj.output_raw);
+      vueObj.notify("Copied output to clipboard.")
+    }
   }
 });
 

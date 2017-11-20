@@ -1,7 +1,7 @@
 var figlet = require('figlet');
 const path = require('path')
 const url = require('url')
-
+const {clipboard} = require('electron')
 
 module.exports =
   ({vueObj, common, parse}, s) => {
@@ -43,7 +43,17 @@ module.exports =
 
         vueObj.output = `<pre>${figlet.textSync(text, font)}</pre>`
       } else {
-        vueObj.output = `<pre>${figlet.textSync(text)}</pre>`
+        var figletOutput = figlet.textSync(text);
+        vueObj.output = `<pre>${figletOutput}</pre><button id='copyText'>Copy to clipboard</button>`
+
+        // make sure DOM is loaded for binding mouse event
+        vueObj.$nextTick(function () {
+          document.getElementById(`copyText`).onclick = () =>  {
+            clipboard.writeText(figletOutput.replace(/\r?\n/g, "\r\n"));
+            this.notify(`Copied '${text}' as ascii to clipboard.`);
+            return true;
+          };
+        })
       }
     }
   }
