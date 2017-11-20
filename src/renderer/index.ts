@@ -1,12 +1,7 @@
 'use strict'
 
 import * as Vue from 'vue'
-// import * as Vue from 'vue'
-// import {urlencode, webView} from '../common/web-functions'
-import * as webUtils from '../common/web-utils'
-//
-
-// console.log('Renderer initialized!')
+import { webUtils } from '../common'
 
 Vue.config.devtools = false
 Vue.config.productionTip = false
@@ -31,9 +26,6 @@ var vueObj = new Vue({
   <div v-if="output" id="output" v-html="output"></div>
 </div>`
 })
-// window['vueObj'] = vueObj
-
-
 
 var unknownCommand = (cmd: string, args: string[]) => `Command '${cmd} ${args.join(' ')}' not found. Available: ${commandList()}`
 
@@ -64,7 +56,7 @@ symbolHandlers = {
   '?': {
     'g':
       (...args: string[]): string => {
-        var query = webUtils.urlencode(args.join(' '));
+        var query = webUtils.urlEncode(args.join(' '));
         return webUtils.webView(`https://www.google.nl/search?q=${query}`);
       }
     //, 'xkcd': (...args: string[]): string => common.webView(`https://m.xkcd.com/`)
@@ -146,7 +138,8 @@ function handleInput(isSubmit: boolean): void {
   //
 };
 
-
+// TODO: perform plugin loading in main process rather than Renderer
+// TODO: perform check if a command already belongs to another plugin (overloading is probably a bad idea)
 var pluginManager = require('../core/xct-plugin-manager/index.js')
 var {loadedPlugins, loadedPluginConfigs} = pluginManager.loadPlugins()
 
