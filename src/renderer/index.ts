@@ -211,10 +211,10 @@ function handleCmd(input: string, isSubmit: boolean) {
         return true;
       }
     }
-
     vueObj.output = unknownCommand(input);
     return false;
   } else {
+    if(input=="") vueObj.output = ""
     // xctAutoComplete(context, input);
 
     for(const pId in handlers) {
@@ -223,8 +223,12 @@ function handleCmd(input: string, isSubmit: boolean) {
         return true;
       }
     }
-    vueObj.output = unknownCommand(input);
-    // xctMath(context, input);
+    // console.log('test')
+    vueObj.output = ""
+    xctMath(context, input);
+    // var output = vueObj.output;
+
+    if(vueObj.output=="") vueObj.output = unknownCommand(input);
     // return false;
   }
 }
@@ -256,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       // prevent submitting when selecting autocomplete by keyboard
       if(inputElement === document.activeElement)
-        handleInput({isSubmit: isSubmit});
+        handleInput(isSubmit);
       // e.preventDefault();
 
     }
@@ -266,20 +270,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
       isSubmit = false
       if (e==undefined) e = <KeyboardEvent>window.event;
       var keyCode = e.keyCode || e.which;
+      if (keyCode == 13) return;
       if (keyCode == 8) { // backspace
         xctAutoComplete(context, (<HTMLInputElement>inputElement).value);
-        handleInput({isSubmit: isSubmit});
+        handleInput(isSubmit);
+        return true;
       } else if (keyCode == 13) { // enter
-        if(inputElement === document.activeElement)
-          handleInput({isSubmit: isSubmit});
+        if(inputElement === document.activeElement) {
+          handleInput(isSubmit);
+          return true;
+        }
       } else {
-        handleInput({isSubmit: isSubmit});
+        handleInput(isSubmit);
         xctAutoComplete(context, (<HTMLInputElement>inputElement).value);
+        return true;
       }
     }
   }
   if(submitElement) submitElement.onclick = () => {
-    handleInput({isSubmit: true})
+    handleInput(true)
   }
   if(copyElement) copyElement.onclick = () => {
     if(vueObj.output != "" && vueObj.output_raw != "") {
@@ -290,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   context.vueObj.output = unknownCommand('');
 });
 
-function handleInput({isSubmit}): void {
+function handleInput(isSubmit): void {
   var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
   if(inputElement) handleCmd(inputElement.value, isSubmit);
 };

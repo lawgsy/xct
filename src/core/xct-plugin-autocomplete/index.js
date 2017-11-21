@@ -16,6 +16,6 @@ module.exports =
       vueObj.suggestions = fuzzy.filter(s, handlers,
         // match first portion of plugin command template, only
         { extract: p => p.template.split(' ')[0] }
-      ).map( o => o.original )
+      ).map( o => o.original ).filter(o => o.template.split(' ')[0]!=s)
     }
   }
