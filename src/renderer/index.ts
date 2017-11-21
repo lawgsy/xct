@@ -123,9 +123,9 @@ var vueObj = new Vue({
 var unknownCommand =
   (input) => {
     if(input.length>0)
-      return `<p>Command '${input}' not found. Available:<br />${commandList()}</p>`
+      return `<div class='text'>Command '${input}' not found. Available:<br />${commandList()}</div>`
     else
-      return `<p>Available:<br />${commandList()}</p>`
+      return `<div class='text'>Available:<br />${commandList()}</div>`
   }
 // import * as figlet from './../plugins/xct-plugin-figlet'
 // import * as xkcd from './../plugins/xct-plugin-xkcd'

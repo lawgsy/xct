@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>XCT</title>
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
     <style media="screen">
       @import url(https://unpkg.com/spectre.css/dist/spectre.min.css);
       .empty {
@@ -23,20 +24,6 @@
         width: 100%;
       }
 
-      webview {
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-      p {
-        display: inline;
-        margin:0
-      }
-      pre {
-        line-height: 18px;
-      }
       /* The snackbar - position it at the bottom and in the middle of the screen */
       #snackbar {
           visibility: hidden; /* Hidden by default. Visible on click */
@@ -92,18 +79,41 @@
       /* .menu {
         border:1px solid #000000;
       } */
-      body {
+      html, body {margin:0;padding:0;height:100%;}
+      #app {
         background-color: #040004;
         color: #FA023C;
+        font-family: 'Inconsolata', monospace;
+        height:100%;
       }
       .form-input {
         background-color: #040004;
         color: #C8FF00;
         border:0;
-        border-bottom: 1px solid #413D3D;
+        /* padding-top:15px; */
+        border-bottom: 1px dashed #413D3D;
+      }
+      input[type=text] {
+        padding-top:10px;
+      }
+      .text {
+        padding: 10px;
+      }
+      webview {
+        background-color: #FFFFFF;
+        color: #000000;
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        bottom: 0;
       }
       p {
-        padding:10px
+        display: inline;
+        margin:0
+      }
+      pre {
+        line-height: 18px;
       }
 
 

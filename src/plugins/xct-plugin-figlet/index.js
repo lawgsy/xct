@@ -5,6 +5,7 @@ const {clipboard} = require('electron')
 
 module.exports =
   ({vueObj, common, parse}, s) => {
+    // vueObj.notify('Executing figlet...')
     var text = common.parseInput(s).input;
     var positionalArgs = parse(text)._ // split into arguments, taking quotation marks into account
 
