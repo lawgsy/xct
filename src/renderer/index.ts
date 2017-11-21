@@ -120,8 +120,12 @@ var vueObj = new Vue({
 (<any>window).vueObj = vueObj; // not a very nice hack to access vueObj.notify through window.vueObj.notify
 
 var unknownCommand =
-  (input) => `Command '${input}' not found. Available:<br />${commandList()}`
-
+  (input) => {
+    if(input.length>0)
+      return `Command '${input}' not found. Available:<br />${commandList()}`
+    else
+      return `Available:<br />${commandList()}`
+  }
 // import * as figlet from './../plugins/xct-plugin-figlet'
 // import * as xkcd from './../plugins/xct-plugin-xkcd'
 
@@ -208,7 +212,7 @@ function handleCmd(input: string, isSubmit: boolean) {
       }
     }
 
-    context.vueObj.output = unknownCommand(input);
+    vueObj.output = unknownCommand(input);
     return false;
   } else {
     // xctAutoComplete(context, input);
@@ -219,6 +223,7 @@ function handleCmd(input: string, isSubmit: boolean) {
         return true;
       }
     }
+    vueObj.output = unknownCommand(input);
     // xctMath(context, input);
     // return false;
   }
@@ -234,14 +239,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var inputElement = document.getElementById('cmdInput');
   var submitElement = document.getElementById('submitBtn');
   var copyElement = document.getElementById('copyBtn');
-  var isSubmit: boolean = false;
+  var isSubmit: boolean;
 
   // bind events
   if(inputElement) {
     inputElement.focus();
 
     inputElement.onkeypress = (e) => { // onkeyup
-      isSubmit = false;
+      isSubmit = false
       //   xctAutoComplete(context, input);
       if (e==undefined) e = <KeyboardEvent>window.event;
       var keyCode = e.keyCode || e.which;
@@ -251,30 +256,30 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       // prevent submitting when selecting autocomplete by keyboard
       if(inputElement === document.activeElement)
-        handleInput(isSubmit);
+        handleInput({isSubmit: isSubmit});
       // e.preventDefault();
 
     }
 
     // update autocomplete after pressing backspace
     inputElement.onkeyup = (e) => { // onkeyup
+      isSubmit = false
       if (e==undefined) e = <KeyboardEvent>window.event;
       var keyCode = e.keyCode || e.which;
       if (keyCode == 8) { // backspace
         xctAutoComplete(context, (<HTMLInputElement>inputElement).value);
-        handleInput(false);
+        handleInput({isSubmit: isSubmit});
       } else if (keyCode == 13) { // enter
         if(inputElement === document.activeElement)
-          handleInput(false);
+          handleInput({isSubmit: isSubmit});
       } else {
-        handleInput(false);
+        handleInput({isSubmit: isSubmit});
         xctAutoComplete(context, (<HTMLInputElement>inputElement).value);
       }
     }
   }
   if(submitElement) submitElement.onclick = () => {
-    var isSubmit: boolean = true;
-    handleInput(isSubmit)
+    handleInput({isSubmit: true})
   }
   if(copyElement) copyElement.onclick = () => {
     if(vueObj.output != "" && vueObj.output_raw != "") {
@@ -282,9 +287,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
       vueObj.notify("Copied output to clipboard.")
     }
   }
+  context.vueObj.output = unknownCommand('');
 });
 
-function handleInput(isSubmit: boolean): void {
+function handleInput({isSubmit}): void {
   var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
   if(inputElement) handleCmd(inputElement.value, isSubmit);
 };
