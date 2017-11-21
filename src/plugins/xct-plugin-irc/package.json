@@ -8,8 +8,7 @@
   "dependencies": {
     "irc": "^0.5.2",
     "irc-client": "^0.0.2",
-    "node-irc": "^0.0.4",
-    "qrcode": "^1.0.0"
+    "node-irc": "^0.0.4"
   },
   "xct": {
     "command": "^irc$",
