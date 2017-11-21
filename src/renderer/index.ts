@@ -110,11 +110,12 @@ var vueObj = new Vue({
   </ul>
 </div>
   </div>
-  <div class="divider-vert" data-content="OUTPUT" v-if="output" style="position:relative"></div>
   <div v-if="output" id="output" v-html="output"></div>
   <div id="snackbar" v-html="msg"></div>
 </div>`
 });
+// <div class="divider-vert text-dark bg-light" data-content="OUTPUT" v-if="output" style="position:relative"></div>
+//
 // <button class="btn btn-primary input-group-btn col-2" id="copyBtn">Copy output</button>
 
 (<any>window).vueObj = vueObj; // not a very nice hack to access vueObj.notify through window.vueObj.notify
@@ -122,9 +123,9 @@ var vueObj = new Vue({
 var unknownCommand =
   (input) => {
     if(input.length>0)
-      return `Command '${input}' not found. Available:<br />${commandList()}`
+      return `<p>Command '${input}' not found. Available:<br />${commandList()}</p>`
     else
-      return `Available:<br />${commandList()}`
+      return `<p>Available:<br />${commandList()}</p>`
   }
 // import * as figlet from './../plugins/xct-plugin-figlet'
 // import * as xkcd from './../plugins/xct-plugin-xkcd'
