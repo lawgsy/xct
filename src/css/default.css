@@ -136,3 +136,14 @@ pre {
   border-color    : #E10023;
   color           : #FFFFFF;
 }
+.webview-right {
+  background-color: #FFFFFF;
+  color: #000000;
+  position: absolute;
+  top: 0;
+  /* left: 0; */
+  left:50%;
+  width:50%;
+  right: 0;
+  bottom: 0;
+}
