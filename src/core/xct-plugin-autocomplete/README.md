@@ -1,3 +1,3 @@
-# xct-plugin-figlet
+# xct-plugin-autocomplete
 
-Display input text as ASCII art using [figlet NPM package](https://www.npmjs.com/package/figlet).
+Autocompletion plugin
