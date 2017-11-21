@@ -10,7 +10,8 @@ var bases = {
 };
 
 var paths = {
- main: ['index.html', 'config.js'],
+ main: ['index.html'],
+ css: ['css/*.css'],
  core: ['core/**', './config.js', '!core/**/*.ts'],
  plugins: ['plugins/**']
 };
@@ -31,6 +32,10 @@ gulp.task('copy', [], function() {
   gulp.src(paths.main, {cwd: bases.src})
       .pipe(gulp.dest(bases.app));
 });
+gulp.task('copy-css', [], function() {
+  gulp.src(paths.css, {cwd: bases.src})
+      .pipe(gulp.dest(bases.app+'/css'));
+});
 gulp.task('copy-core', [], function() {
   gulp.src(paths.core, {cwd: bases.src})
       .pipe(gulp.dest(bases.app+'/core'));
@@ -45,13 +50,14 @@ gulp.task('watch', function() {
   gulp.watch(`${bases.src}/core/**`, ['copy-core']);
   // gulp.watch(`${bases.src}/common/**`, ['typescript', 'copy']);
   gulp.watch(`${bases.src}/**/*.ts`, ['typescript', 'copy']);
+  gulp.watch(`${bases.src}/css/*.css`, ['copy-css']);
   gulp.watch([
     `${bases.src}/**/*.html`,
     `${bases.src}/**/*.json`
   ], ['copy']);
 });
 
-gulp.task('default', ['typescript', 'copy', 'copy-core', 'copy-plugins'])
+gulp.task('default', ['typescript', 'copy', 'copy-core', 'copy-plugins', 'copy-css'])
 
 
 // NOTE: maybe use electron-connect for live reload instead?
