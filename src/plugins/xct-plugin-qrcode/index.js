@@ -6,9 +6,9 @@ module.exports =
     var {input} = common.parseInput(s)
     if(input) {
       QRCode.toDataURL(input, function (err, url) {
-        vueObj.output = `<center><img src="${url}"/></center>`
+        vueObj.output = `<div class='text'><center><img src="${url}"/></center></div>`
       })
     } else {
-      vueObj.output = `Please enter text to convert to a QR code.`
+      vueObj.output = `<div class='text'>Please enter text to convert to a QR code.</div>`
     }
   }

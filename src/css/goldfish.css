@@ -1,0 +1,33 @@
+html, body {margin:0;padding:0;height:100%;}
+#app {
+  background-color: #E0E4CC;
+  color: #000000;
+  font-family: 'Inconsolata', monospace;
+  height:100%;
+}
+.form-input {
+  background-color: #000000;
+  color: #FA6900;
+  border:0;
+  /* padding-top:15px; */
+  border-bottom: 1px dashed #413D3D;
+}
+.btn.btn-primary {
+  background-color: #FA6900;
+  border-color    : #FA6900;
+  color           : #000000;
+}
+.btn.btn-primary:hover,.btn.btn-primary:focus {
+  background-color: #F38630;
+  border-color    : #F38630;
+  color           : #000000;
+}
+.btn.btn-primary:active {
+  background-color: #F38630;
+  border-color    : #F38630;
+  color           : #FFFFFF;
+}
+#snackbar {
+  color: #FA6900;
+  background-color:#000000;
+}

@@ -10,7 +10,7 @@ module.exports =
     var positionalArgs = parse(text)._ // split into arguments, taking quotation marks into account
 
     if(positionalArgs[0] == "help") {
-      vueObj.output = `Type 'figlet examples' for examples of fonts listed here. Available fonts: <br />${figlet.fontsSync()}`
+      vueObj.output = `<div class='text'>Type 'figlet examples' for examples of fonts listed here. Available fonts: <br />${figlet.fontsSync()}</div>`
     } else if(positionalArgs[0] == "examples") {
       vueObj.output = common.webUtils.webView(url.format({
         pathname: path.join(__dirname, 'examples.html'),
@@ -37,7 +37,7 @@ module.exports =
       // });
     } else {
       if(text.length==0) {
-        vueObj.output = `Please enter some text to convert to ASCII`
+        vueObj.output = `<div class='text'>Please enter some text to convert to ASCII</div>`
         return true;
       }
       var font = positionalArgs.shift();

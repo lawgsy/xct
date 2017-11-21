@@ -150,7 +150,10 @@ handlers = [
   {
     'pId': 'echo',
     'pattern': '^echo .*',
-    'func': (_, s: string) => { vueObj.output = common.parseInput(s).input },
+    'func': (_, s: string) => {
+      vueObj.output =
+        `<div class='text'>${common.parseInput(s).input}</div>`
+    },
     'live': true,
     'usage': `**echo** text`,
     'description': 'Echo text back as output',
