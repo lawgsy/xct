@@ -7,7 +7,7 @@ module.exports =
     try {
       var result = math.eval(s.replace(/,/g, '.'));
       if(typeof result === "number" || typeof result === "object")
-        vueObj.output = `${s} = ${result}`
+        vueObj.output = `<div class="text">${s} = ${result}</div>`
       //else vueObj.output = (typeof result)
     } catch(e) {
       return false;
