@@ -35,6 +35,10 @@ module.exports =
       //   })
       // });
     } else {
+      if(text.length==0) {
+        vueObj.output = `Please enter some text to convert to ASCII`
+        return true;
+      }
       var font = positionalArgs.shift();
       if (figlet.fontsSync().indexOf(font) != -1) {
         // strip font from text (and quotation marks if present)

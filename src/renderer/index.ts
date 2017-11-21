@@ -49,6 +49,19 @@ var vueObj = new Vue({
           vueObj.msg = "";
           vueObj.msgShowFunc = null;
         }, 3000);
+      },
+      selectSuggestion: (suggestion) => {
+        vueObj.suggestions = [];
+        suggestion.template
+        var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
+        if(inputElement) {
+          var firstCmd = suggestion.template.split(' ')[0];
+          inputElement.value = suggestion.template.split(' ')[0];
+          if (firstCmd != suggestion.template) inputElement.value += " "
+          inputElement.focus();
+          return false;
+        }
+
       }
     },
 
@@ -70,7 +83,7 @@ var vueObj = new Vue({
   <ul class="menu" v-if="suggestions.length">
     <!-- menu list chips -->
     <li class="menu-item" v-for="suggestion in suggestions">
-      <a href="#">
+      <a href="#" v-on:click="selectSuggestion(suggestion)">
         <div class="tile tile-centered">
           <div class="tile-content">{{suggestion.template}}</div>
         </div>

@@ -2,7 +2,12 @@ const QRCode = require('qrcode');
 
 module.exports =
   ({vueObj, common}, s) => {
-    QRCode.toDataURL(common.parseInput(s).input, function (err, url) {
-      vueObj.output = `<center><img src="${url}"/></center>`
-    })
+    var {input} = common.parseInput(s)
+    if(input) {
+      QRCode.toDataURL(input, function (err, url) {
+        vueObj.output = `<center><img src="${url}"/></center>`
+      })
+    } else {
+      vueObj.output = `Please enter text to convert to a QR code.`
+    }
   }

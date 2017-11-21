@@ -9,7 +9,7 @@
     "qrcode": "^1.0.0"
   },
   "xct": {
-    "command": "^qrcode .+",
+    "command": "^qrcode .*",
     "usage": "**qrcode** _text_",
     "template": "qrcode text",
     "example_output": null,
