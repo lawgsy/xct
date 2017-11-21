@@ -30,7 +30,8 @@ var vueObj = new Vue({
         output: "",
         output_raw: "",
         msg: "",
-        msgShowFunc: null
+        msgShowFunc: null,
+        suggestions: []
     },
     methods: {
       notify: (text: string) => {
@@ -50,11 +51,33 @@ var vueObj = new Vue({
         }, 3000);
       }
     },
+
+    // <input type="text" id="cmdInput" placeholder="..." class="col-11"/>
+
     template: `
 <div>
   <div class="input-group input-inline col-12">
-    <input type="text" id="cmdInput" placeholder="..." class="col-11"/>
+<div class="form-autocomplete col-12">
+  <!-- autocomplete input container -->
+  <div class="form-autocomplete-input form-input">
+
+    <!-- autocomplete real input box -->
+    <input class="form-input col-11" type="text" id="cmdInput" placeholder="" />
     <button class="btn btn-primary input-group-btn col-1" id="submitBtn">XCT</button>
+  </div>
+
+  <!-- autocomplete suggestion list -->
+  <ul class="menu" v-if="suggestions.length">
+    <!-- menu list chips -->
+    <li class="menu-item" v-for="suggestion in suggestions">
+      <a href="#">
+        <div class="tile tile-centered">
+          <div class="tile-content">{{suggestion.template}}</div>
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
   </div>
   <div class="divider-vert" data-content="OUTPUT" v-if="output" style="position:relative"></div>
   <div v-if="output" id="output" v-html="output"></div>
@@ -232,3 +255,4 @@ for(const pId in loadedPluginConfigs) {
     console.log(`loaded '${pId}' with command '${pConfig["command"]}'`)
   }
 }
+// vueObj.results = handlers

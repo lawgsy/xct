@@ -6,10 +6,15 @@ console.log('>>> ',__dirname)
 
 module.exports =
   ({vueObj, common, parse, handlers}, s) => {
-    var results = handlers.filter(
-      p => p.template.split(' ')[0].indexOf(s) != -1
-    )
+    if(s.length<1) vueObj.suggestions = [];
+    else {
+      // vueObj.suggestions = handlers.filter(
+      //   p => p.template.split(' ')[0].indexOf(s) != -1
+      // )
 
-    vueObj.output = results.map(p => p.template).join('<br />')
-    // console.log(__dirname, s, 'hi',results)
+      // fuzzy search
+      vueObj.suggestions = fuzzy.filter(s, handlers,
+        { extract: p => p.template.split(' ')[0] }
+      ).map( o => o.original )
+    }
   }
