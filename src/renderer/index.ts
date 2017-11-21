@@ -50,9 +50,11 @@ var vueObj = new Vue({
           vueObj.msgShowFunc = null;
         }, 3000);
       },
-      selectSuggestion: (suggestion) => {
+      selectSuggestion: (suggestion, e) => {
+        e.preventDefault();
+        console.log("stop", e)
         vueObj.suggestions = [];
-        suggestion.template
+        // suggestion.template
         var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
         if(inputElement) {
           var firstCmd = suggestion.template.split(' ')[0];
@@ -60,6 +62,22 @@ var vueObj = new Vue({
           if (firstCmd != suggestion.template) inputElement.value += " "
           inputElement.focus();
           return false;
+        }
+
+      },
+      selectSuggestion2: (suggestion, e) => {
+        e.preventDefault();
+        if(e.keyCode==9) {
+          vueObj.suggestions = [];
+          // suggestion.template
+          var inputElement = <HTMLInputElement>document.getElementById('cmdInput')
+          if(inputElement) {
+            var firstCmd = suggestion.template.split(' ')[0];
+            inputElement.value = suggestion.template.split(' ')[0];
+            if (firstCmd != suggestion.template) inputElement.value += " "
+            inputElement.focus();
+            return false;
+          }
         }
 
       }
@@ -75,15 +93,15 @@ var vueObj = new Vue({
   <div class="form-autocomplete-input form-input">
 
     <!-- autocomplete real input box -->
-    <input class="form-input col-11" type="text" id="cmdInput" placeholder="" />
+    <input class="form-input col-11" type="text" id="cmdInput" placeholder="" tabindex="1"/>
     <button class="btn btn-primary input-group-btn col-1" id="submitBtn">XCT</button>
   </div>
 
   <!-- autocomplete suggestion list -->
   <ul class="menu" v-if="suggestions.length">
     <!-- menu list chips -->
-    <li class="menu-item" v-for="suggestion in suggestions">
-      <a href="#" v-on:click="selectSuggestion(suggestion)">
+    <li class="menu-item" v-for="(index, suggestion) in suggestions">
+      <a href="#" v-on:click="selectSuggestion(suggestion, $event)" tabindex="{{index+2}}">
         <div class="tile tile-centered">
           <div class="tile-content">{{suggestion.template}}</div>
         </div>
@@ -193,7 +211,7 @@ function handleCmd(input: string, isSubmit: boolean) {
     context.vueObj.output = unknownCommand(input);
     return false;
   } else {
-    xctAutoComplete(context, input);
+    // xctAutoComplete(context, input);
 
     for(const pId in handlers) {
       if(handlers[pId].live && input.match(handlers[pId].pattern)) {
@@ -222,14 +240,36 @@ document.addEventListener("DOMContentLoaded", function(event) {
   if(inputElement) {
     inputElement.focus();
 
-    inputElement.onkeyup = (e) => {
+    inputElement.onkeypress = (e) => { // onkeyup
       isSubmit = false;
+      //   xctAutoComplete(context, input);
       if (e==undefined) e = <KeyboardEvent>window.event;
       var keyCode = e.keyCode || e.which;
-      if (keyCode == 13) {
+      if (keyCode == 13) { // enter
         isSubmit = true;
       }
-      handleInput(isSubmit);
+
+      // prevent submitting when selecting autocomplete by keyboard
+      if(inputElement === document.activeElement)
+        handleInput(isSubmit);
+      // e.preventDefault();
+
+    }
+
+    // update autocomplete after pressing backspace
+    inputElement.onkeyup = (e) => { // onkeyup
+      if (e==undefined) e = <KeyboardEvent>window.event;
+      var keyCode = e.keyCode || e.which;
+      if (keyCode == 8) { // backspace
+        xctAutoComplete(context, (<HTMLInputElement>inputElement).value);
+        handleInput(false);
+      } else if (keyCode == 13) { // enter
+        if(inputElement === document.activeElement)
+          handleInput(false);
+      } else {
+        handleInput(false);
+        xctAutoComplete(context, (<HTMLInputElement>inputElement).value);
+      }
     }
   }
   if(submitElement) submitElement.onclick = () => {
