@@ -10,8 +10,8 @@
   "xct": {
     "command": "^ext$",
     "usage": "**ext**",
-    "example_input": "ext",
-    "example_output": "",
+    "template": "ext",
+    "example_output": "Opens external browser",
     "symbol": null,
     "live": false
   }

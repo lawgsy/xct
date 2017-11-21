@@ -1,0 +1,19 @@
+{
+  "name": "xct-plugin-autocomplete",
+  "version": "0.0.1",
+  "description": "Autocomplete meant for core",
+  "main": "index.js",
+  "author": "Lawg",
+  "license": "MIT",
+  "dependencies": {
+    "fuzzy": "^0.1.3"
+  },
+  "xct": {
+    "command": "^auto .*",
+    "usage": "**auto** text",
+    "template": "auto text",
+    "example_output": "matching suggestions",
+    "symbol": null,
+    "live": true
+  }
+}

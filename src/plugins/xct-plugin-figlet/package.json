@@ -11,8 +11,8 @@
   "xct": {
     "command": "^figlet .*",
     "usage": "**figlet** _[font]_ text",
-    "example_input": "figlet hi",
-    "example_output": "",
+    "template": "figlet text",
+    "example_output": "ASCII representation of text",
     "symbol": null,
     "live": true
   }

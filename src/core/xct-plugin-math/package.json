@@ -10,10 +10,10 @@
     "qrcode": "^1.0.0"
   },
   "xct": {
-    "command": "^.*x$",
+    "command": "^.*$",
     "usage": "**equation**",
-    "example_input": "qrcode hello",
-    "example_output": "",
+    "example_input": null,
+    "example_output": null,
     "symbol": null,
     "live": true
   }

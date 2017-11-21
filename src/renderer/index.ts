@@ -16,6 +16,7 @@ import {clipboard} from 'electron'
 // var pluginManager = require('../core/xct-plugin-manager/index.js')
 import * as pluginManager from './../core/xct-plugin-manager'
 import * as xctMath from './../core/xct-plugin-math'
+import * as xctAutoComplete from './../core/xct-plugin-autocomplete'
 
 
 var vueObj = new Vue({
@@ -73,34 +74,40 @@ var unknownCommand =
 var isLiveHandler: {
   [index: string] : boolean
 }
-var handlers: {
+var handlers: [
   // [index: string] : (context: Object, ...args: string[]) => string
-  [index: string] : {
+  {
+    'pId': string,
     'pattern': string,
     'func': Function,//(context: Object, input: string) => any,
     'live': boolean,
     'usage': string,
-    'description': string
+    'description': string,
+    'template': string
   }
-}
+]
+
+handlers = [
+  {
+    'pId': 'echo',
+    'pattern': '^echo .*',
+    'func': (_, s: string) => { vueObj.output = common.parseInput(s).input },
+    'live': true,
+    'usage': `**echo** text`,
+    'description': 'Echo text back as output',
+    'template': 'echo text'
+  }
+  // 'figlet': (...args: string[]): string => figlet(...args),
+  // 'xkcd': (...args: string[]): string => xkcd(context, ...args)
+]
 
 var context = {
   vueObj: vueObj,
   common: common,
   markdown: markdown,
-  parse: parse
+  parse: parse,
+  handlers: handlers
 };
-handlers = {
-  'echo': {
-    'pattern': '^echo .*',
-    'func': (_, s: string) => { vueObj.output = common.parseInput(s).input },
-    'live': true,
-    'usage': `**echo** text`,
-    'description': 'Echo text back as output'
-  }
-  // 'figlet': (...args: string[]): string => figlet(...args),
-  // 'xkcd': (...args: string[]): string => xkcd(context, ...args)
-}
 
 var symbolHandlers: {
   [index: string] : {
@@ -150,13 +157,15 @@ function handleCmd(input: string, isSubmit: boolean) {
     context.vueObj.output = unknownCommand(input);
     return false;
   } else {
+    xctAutoComplete(context, input);
+
     for(const pId in handlers) {
       if(handlers[pId].live && input.match(handlers[pId].pattern)) {
         handlers[pId].func(context, input);
         return true;
       }
     }
-    xctMath(context, input);
+    // xctMath(context, input);
     // return false;
   }
 }
@@ -210,14 +219,16 @@ var {loadedPlugins, loadedPluginConfigs} = pluginManager.loadPlugins()
 
 for(const pId in loadedPluginConfigs) {
   var pConfig = loadedPluginConfigs[pId];
-  if(pConfig["command"] != "") {
-    handlers[pId] = {
+  if(pConfig["command"] != null) {
+    handlers.push({
+      pId: pId,
       pattern: pConfig["command"],
       func: loadedPlugins[pId],
       live: pConfig["live"],
       usage: pConfig["usage"],
-      description: pConfig["description"]
-    };
+      description: pConfig["description"],
+      template: pConfig["template"]
+    });
     console.log(`loaded '${pId}' with command '${pConfig["command"]}'`)
   }
 }

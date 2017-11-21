@@ -8,7 +8,7 @@ import * as fse  from 'fs-extra'
 interface pluginCfg {
   command?         : string,
   usage?           : string,
-  example_input?   : string,
+  template?        : string,
   example_output?  : string,
   prefix?          : string,
   preferences?     : string,

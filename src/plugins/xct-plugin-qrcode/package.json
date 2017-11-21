@@ -11,8 +11,8 @@
   "xct": {
     "command": "^qrcode .+",
     "usage": "**qrcode** _text_",
-    "example_input": "qrcode hello",
-    "example_output": "",
+    "template": "qrcode text",
+    "example_output": null,
     "symbol": null,
     "live": true
   }

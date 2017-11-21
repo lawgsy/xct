@@ -10,8 +10,8 @@
   "xct": {
     "command": "^local$",
     "usage": "**local**",
-    "example_input": "local",
-    "example_output": "",
+    "template": "local",
+    "example_output": null,
     "symbol": null,
     "live": false
   }

@@ -42,7 +42,7 @@ gulp.task('copy-plugins', [], function() {
 
 gulp.task('watch', function() {
   gulp.watch(`${bases.src}/plugins/**/*`, ['copy-plugins']);
-  // gulp.watch(`${bases.src}/core/**`, ['typescript', 'copy-core']);
+  gulp.watch(`${bases.src}/core/**`, ['copy-core']);
   // gulp.watch(`${bases.src}/common/**`, ['typescript', 'copy']);
   gulp.watch(`${bases.src}/**/*.ts`, ['typescript', 'copy']);
   gulp.watch([

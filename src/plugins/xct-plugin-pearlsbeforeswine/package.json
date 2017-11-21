@@ -10,8 +10,8 @@
   "xct": {
     "command": "^pbs$",
     "usage": "**pbs**",
-    "example_input": "pbs",
-    "example_output": "",
+    "template": "pbs",
+    "example_output": null,
     "symbol": null,
     "live": false
   }

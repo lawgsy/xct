@@ -11,8 +11,8 @@
   "xct": {
     "command": "^\\?w .*$",
     "usage": "**?w** *query*",
-    "example_input": "?w 1+2",
-    "example_output": "",
+    "template": "?w query",
+    "example_output": null,
     "symbol": null,
     "live": false
   }

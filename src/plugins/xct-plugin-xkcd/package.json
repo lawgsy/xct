@@ -10,7 +10,7 @@
   "xct": {
     "command": "^xkcd$",
     "usage": "**xkcd**",
-    "example_input": "xkcd",
+    "template": "xkcd",
     "example_output": "[webview] showing latest xkcd",
     "symbol": null,
     "live": false
