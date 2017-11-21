@@ -5,6 +5,7 @@ const {clipboard} = require('electron')
 
 module.exports =
   ({vueObj, common, parse}, s) => {
+    // vueObj.notify('Executing figlet...')
     var text = common.parseInput(s).input;
     var positionalArgs = parse(text)._ // split into arguments, taking quotation marks into account
 
@@ -48,7 +49,7 @@ module.exports =
         vueObj.output = `<pre>${figlet.textSync(text, font)}</pre>`
       } else {
         var figletOutput = figlet.textSync(text);
-        vueObj.output = `<pre>${figletOutput}</pre><button id='copyText'>Copy to clipboard</button>`
+        vueObj.output = `<pre>${figletOutput}</pre><button id='copyText' class='btn btn-primary centered'>Copy to clipboard</button>`
 
         // make sure DOM is loaded for binding mouse event
         vueObj.$nextTick(function () {
