@@ -98,4 +98,5 @@ module.exports =
     // client.say('#xct-test', "I'm a bot!");
     //
     //
+    return new Promise((resolve, reject) => resolve({}));
   }

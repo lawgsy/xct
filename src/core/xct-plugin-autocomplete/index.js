@@ -1,10 +1,7 @@
-// const path = require('path')
-// const url = require('url')
-// const {clipboard} = require('electron')
 const fuzzy = require('fuzzy');
 
 module.exports =
-  ({vueObj, common, parse, handlers}, s) => {
+  ({vueObj, handlers}, s) => {
     if(s.length<1) vueObj.suggestions = [];
     else {
       // non-fuzzy version:
@@ -16,6 +13,7 @@ module.exports =
       vueObj.suggestions = fuzzy.filter(s, handlers,
         // match first portion of plugin command template, only
         { extract: p => p.template.split(' ')[0] }
-      ).map( o => o.original ).filter(o => o.template.split(' ')[0]!=s)
+      ).map( o => o.original )
+       .filter(o => o.template.split(' ')[0] != s)
     }
   }

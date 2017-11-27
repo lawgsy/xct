@@ -5,60 +5,52 @@ const {clipboard} = require('electron')
 
 module.exports =
   ({vueObj, common, parse}, s) => {
-    // vueObj.notify('Executing figlet...')
-    var text = common.parseInput(s).input;
-    var positionalArgs = parse(text)._ // split into arguments, taking quotation marks into account
+    return new Promise((resolve, reject) => {
+      // vueObj.notify('Executing figlet...')
+      var text = common.parseInput(s).input;
+      var positionalArgs = parse(text)._ // split into arguments, taking quotation marks into account
 
-    if(positionalArgs[0] == "help") {
-      vueObj.output = `<div class='text'>Type 'figlet examples' for examples of fonts listed here. Available fonts: <br />${figlet.fontsSync()}</div>`
-    } else if(positionalArgs[0] == "examples") {
-      vueObj.output = common.webUtils.webView(url.format({
-        pathname: path.join(__dirname, 'examples.html'),
-        protocol: 'file:',
-        slashes: true
-      }))
-      // figlet.fonts(function(err, fonts) {
-      //   if (err) {
-      //       console.dir(err);
-      //       return;
-      //   }
-      //   vueObj.output = "";
-      //   fonts.map(font => {
-      //     // return `font: ${font}<br/><pre>${figlet.textSync(font, font)}</pre>`
-      //     figlet("Test", font, function(err, text) {
-      //       if (err) {
-      //         console.log('something went wrong...');
-      //         console.dir(err);
-      //         return;
-      //       }
-      //       vueObj.output += `font: ${font}<br /><pre>${text}</pre><br /><br />`
-      //     });
-      //   })
-      // });
-    } else {
-      if(text.length==0) {
-        vueObj.output = `<div class='text'>Please enter some text to convert to ASCII</div>`
-        return true;
-      }
-      var font = positionalArgs.shift();
-      if (figlet.fontsSync().indexOf(font) != -1) {
-        // strip font from text (and quotation marks if present)
-        if(text[0]==`"`) text = text.substring(font.length+3, text.length);
-        else text = text.substring(font.length+1, text.length);
-
-        vueObj.output = `<pre>${figlet.textSync(text, font)}</pre>`
-      } else {
-        var figletOutput = figlet.textSync(text);
-        vueObj.output = `<pre>${figletOutput}</pre><button id='copyText' class='btn btn-primary centered'>Copy to clipboard</button>`
-
-        // make sure DOM is loaded for binding mouse event
-        vueObj.$nextTick(function () {
-          document.getElementById(`copyText`).onclick = () =>  {
-            clipboard.writeText(figletOutput.replace(/\r?\n/g, "\r\n"));
-            this.notify(`Copied '${text}' as ascii to clipboard.`);
-            return true;
-          };
+      if(positionalArgs[0] == "help") {
+        resolve({
+          output: `<div class='text'>Type 'figlet examples' for examples of fonts listed here. Available fonts: <br />${figlet.fontsSync()}</div>`
         })
+      } else if(positionalArgs[0] == "examples") {
+        var loadURL = url.format({
+          pathname: path.join(__dirname, 'examples.html'),
+          protocol: 'file:',
+          slashes: true
+        })
+
+        resolve({ output: common.webUtils.webView(loadURL) })
+      } else {
+        if(text.length==0) {
+          resolve({
+            output: `<div class='text'>Please enter some text to convert to ASCII.</div>`
+          })
+        }
+        var font = positionalArgs.shift();
+        if (figlet.fontsSync().indexOf(font) != -1) {
+          // strip font from text (and quotation marks if present)
+          if(text[0]==`"`) text = text.substring(font.length+3, text.length);
+          else text = text.substring(font.length+1, text.length);
+
+          resolve({ output: `<pre>${figlet.textSync(text, font)}</pre>` })
+        } else {
+          var figletOutput = figlet.textSync(text);
+          resolve({
+            output: `<pre>${figletOutput}</pre><button id='copyText' class='btn btn-primary centered'>Copy to clipboard</button>`,
+            bindings: {
+              'copyText': {
+                evnt: 'click',
+                fnct: () =>  {
+                  clipboard.writeText(figletOutput.replace(/\r?\n/g, "\r\n"));
+                  vueObj.notify(`Copied '${text}' as ascii to clipboard.`);
+                }
+              }
+            }
+          });
+        }
       }
-    }
+    });
+
   }

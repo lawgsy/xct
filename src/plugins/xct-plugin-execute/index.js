@@ -1,15 +1,21 @@
-execa = require("execa")
+const execa = require("execa");
 
-module.exports =
-  ({vueObj, common}, s) => {
-    // TODO: maybe add parameter saying whether command was manually executed or by realtime/live output
-    whitelist = ['ipconfig', 'systeminfo', 'getmac'];
-    var {input} = common.parseInput(s)
+module.exports = ({common}, s) => {
+  return new Promise((resolve, reject) => {
+    let whitelist = ['ipconfig', 'systeminfo', 'getmac'];
+    const {input} = common.parseInput(s)
     if(whitelist.indexOf(input)!=-1) {
       execa(input).then(result => {
-        vueObj.output = `<div class='text'><pre>${result.stdout}</pre></div>`;
-      });
+        resolve({
+          output: common.txt(`<pre>${result.stdout}</pre>`)
+        });
+      }).catch(e => reject(e));
     } else {
-      vueObj.output = `<div class='text'>Please enter a command to execute. Only the following commands are whitelisted:<br />${whitelist.join(', ')}</div>`
+      resolve({
+        output: common.txt(`Please enter a command to execute. ` +
+                           `The following commands are whitelisted:<br />` +
+                           whitelist.join(', '))
+      });
     }
-  }
+  });
+}

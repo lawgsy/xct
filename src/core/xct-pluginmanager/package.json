@@ -1,7 +1,7 @@
 {
-  "name": "xct-plugin-manager",
+  "name": "xct-pluginmanager",
   "version": "0.0.1",
-  "description": "Plugin manager plugin",
+  "description": "Plugin manager",
   "main": "index.ts",
   "author": "Lawg",
   "license": "MIT",

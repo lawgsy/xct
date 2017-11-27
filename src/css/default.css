@@ -78,22 +78,33 @@ input[type=text] {
 .text {
   padding: 10px;
   top: 41px;
-  left: 0;
+  /* left: 0;
   right: 0;
   bottom: 0;
   position: absolute;
-  width: 100%;
+  width: 100%; */
   overflow: auto;
   word-wrap: break-word;
 }
 webview {
-  background-color: #FFFFFF;
-  color: #000000;
+  /* background-color: #FFFFFF; */
+  /* color: #000000; */
   position: absolute;
   top: 41px;
   left: 0;
   right: 0;
   bottom: 0;
+}
+.webview-right {
+  /* background-color: #FFFFFF; */
+  /* color: #000000; */
+  position: absolute;
+  /* top: 0; */
+  /* left: 0; */
+  left:50%;
+  width:50%;
+  /* right: 0; */
+  /* bottom: 0; */
 }
 p {
   display: inline;
@@ -135,15 +146,4 @@ pre {
   background-color: #E10023;
   border-color    : #E10023;
   color           : #FFFFFF;
-}
-.webview-right {
-  background-color: #FFFFFF;
-  color: #000000;
-  position: absolute;
-  top: 0;
-  /* left: 0; */
-  left:50%;
-  width:50%;
-  right: 0;
-  bottom: 0;
 }

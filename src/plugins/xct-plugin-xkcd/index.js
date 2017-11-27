@@ -1,5 +1,7 @@
 module.exports =
-  ({vueObj, common}, ...args) => {
+  ({vueObj, common}, s) => {
     vueObj.notify('Opening xkcd comic...')
-    vueObj.output = common.webUtils.webView(`https://m.xkcd.com/`)
+    return new Promise((resolve, reject) => {
+      resolve({ output: common.webUtils.webView('https://m.xkcd.com/') })
+    })
   }

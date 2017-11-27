@@ -5,9 +5,12 @@ module.exports =
   ({vueObj, common}, ...args) => {
     vueObj.notify('Opening local file...')
 
-    vueObj.output = common.webUtils.webView(url.format({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
+    return new Promise((resolve, reject) => {
+      var loadURL = url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
+      })
+      resolve({output: common.webUtils.webView(loadURL)})
+    })
   }

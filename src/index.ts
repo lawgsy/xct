@@ -44,6 +44,9 @@ function createWindow() {
 
   mainWindow.webContents.on('new-window', handleRedirect);
   mainWindow.webContents.on('will-navigate', handleRedirect);
+  mainWindow.webContents.on('devtools-opened', () => {
+    mainWindow.webContents.focus();
+  });
 }
 
 // This method will be called when Electron has finished
