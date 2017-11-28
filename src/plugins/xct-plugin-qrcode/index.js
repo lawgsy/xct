@@ -7,16 +7,16 @@ module.exports =
       var {input} = common.parseInput(s)
       if(input) {
         QRCode.toDataURL(input, (err, url) => {
-          if(err) reject(Error(err))
+          if(err) return reject(Error(err));
 
-          resolve({
+          return resolve({
             output: `<div class='text'><center><img src="${url}"/></center></div>`
-          })
+          });
         })
       } else {
-        resolve({
+        return resolve({
           output: `<div class='text'>Please enter text to convert to a QR code.</div>`
-        })
+        });
       }
     })
   }

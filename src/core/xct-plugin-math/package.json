@@ -2,7 +2,7 @@
   "name": "xct-plugin-math",
   "version": "0.0.1",
   "description": "Simple math equation detection.",
-  "main": "index.js",
+  "main": "index.ts",
   "author": "Lawg",
   "license": "MIT",
   "dependencies": {

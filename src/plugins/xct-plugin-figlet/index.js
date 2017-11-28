@@ -8,25 +8,27 @@ module.exports =
     return new Promise((resolve, reject) => {
       // vueObj.notify('Executing figlet...')
       var text = common.parseInput(s).input;
-      var positionalArgs = parse(text)._ // split into arguments, taking quotation marks into account
+
+      // split into arguments, taking quotation marks into account
+      var positionalArgs = parse(text)._;
 
       if(positionalArgs[0] == "help") {
-        resolve({
+        return resolve({
           output: `<div class='text'>Type 'figlet examples' for examples of fonts listed here. Available fonts: <br />${figlet.fontsSync()}</div>`
-        })
+        });
       } else if(positionalArgs[0] == "examples") {
         var loadURL = url.format({
           pathname: path.join(__dirname, 'examples.html'),
           protocol: 'file:',
           slashes: true
-        })
+        });
 
-        resolve({ output: common.webUtils.webView(loadURL) })
+        return resolve({ output: common.webUtils.webView(loadURL) });
       } else {
         if(text.length==0) {
-          resolve({
+          return resolve({
             output: `<div class='text'>Please enter some text to convert to ASCII.</div>`
-          })
+          });
         }
         var font = positionalArgs.shift();
         if (figlet.fontsSync().indexOf(font) != -1) {
@@ -34,10 +36,12 @@ module.exports =
           if(text[0]==`"`) text = text.substring(font.length+3, text.length);
           else text = text.substring(font.length+1, text.length);
 
-          resolve({ output: `<pre>${figlet.textSync(text, font)}</pre>` })
+          return resolve({
+            output: `<pre>${figlet.textSync(text, font)}</pre>`
+          });
         } else {
           var figletOutput = figlet.textSync(text);
-          resolve({
+          return resolve({
             output: `<pre>${figletOutput}</pre><button id='copyText' class='btn btn-primary centered'>Copy to clipboard</button>`,
             bindings: {
               'copyText': {

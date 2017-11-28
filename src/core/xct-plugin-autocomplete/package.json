@@ -2,7 +2,7 @@
   "name": "xct-plugin-autocomplete",
   "version": "0.0.1",
   "description": "Autocomplete meant for core",
-  "main": "index.js",
+  "main": "index.ts",
   "author": "Lawg",
   "license": "MIT",
   "dependencies": {

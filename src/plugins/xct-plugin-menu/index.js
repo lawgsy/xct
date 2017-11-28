@@ -36,7 +36,7 @@ module.exports =
     });
 
     return new Promise((resolve, reject) => {
-      resolve({
+      return resolve({
         output: `
 <div class="text">
   <div style="float:left;width:50%;">

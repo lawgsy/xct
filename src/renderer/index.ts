@@ -1,6 +1,7 @@
 "use strict";
 
 import common from "../common";
+import {IHandler} from "../common";
 import * as config from "./../config";
 
 import * as md from "markdown";
@@ -13,7 +14,6 @@ Vue.config.devtools      = false;
 Vue.config.productionTip = false;
 
 import {clipboard} from "electron";
-
 import {xctAutoComplete, xctMath, xctPluginManager} from "./../core";
 
 const vueObj = new Vue({
@@ -117,16 +117,6 @@ function unknownCommand(input) {
 // import * as figlet from './../plugins/xct-plugin-figlet'
 // import * as xkcd from './../plugins/xct-plugin-xkcd'
 
-interface IHandler {
-  "pId": string;
-  "pattern": string;
-  "func": (context: any, input: string) => Promise<{}>;
-  "live": boolean;
-  "usage": string;
-  "description": string;
-  "template": string;
-}
-
 const handlers: IHandler[] = [ {
     pId: "echo",
     pattern: "^echo .*",
@@ -213,6 +203,7 @@ function handleCmd(input: string, isSubmit: boolean) {
   }
   if (!matched) {// && isSubmit) || input=="") {
     const promise = xctMath(context, input);
+    // (xctMath as (c, s) => Promise<{}>)
     handlePromise(promise, "xct-plugin-math", (e) => {
       // vueObj.output = unknownCommand(""); // unknownCommand(input)
     });
@@ -282,7 +273,6 @@ function handleInput(isSubmit): void {
   if (inputElement) handleCmd(inputElement.value, isSubmit);
 }
 
-// TODO: perform plugin loading in main process rather than Renderer
 const {loadedPlugins, loadedPluginConfigs} = xctPluginManager.loadPlugins();
 
 for (const pId of Object.keys(loadedPlugins)) {

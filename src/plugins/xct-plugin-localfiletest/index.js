@@ -3,7 +3,7 @@ const url = require('url')
 
 module.exports =
   ({vueObj, common}, ...args) => {
-    vueObj.notify('Opening local file...')
+    vueObj.notify('Opening local file...');
 
     return new Promise((resolve, reject) => {
       var loadURL = url.format({
@@ -11,6 +11,6 @@ module.exports =
         protocol: 'file:',
         slashes: true
       })
-      resolve({output: common.webUtils.webView(loadURL)})
+      return resolve({output: common.webUtils.webView(loadURL)})
     })
   }

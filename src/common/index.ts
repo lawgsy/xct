@@ -13,14 +13,23 @@ function parseInput(input: string): {cmd: string, input: string} {
 /**
  * Wrap input string in div ready for output
  * @param  {string} input input string
- * @return {[type]}       input string wrapped text div for output
+ * @return {string}       input string wrapped text div for output
  */
 function txt(input: string) {
   return `<div class='text'>${input}</div>`;
 }
-// function txtRight(input: string) {
-//  return `<div class='text-right'>${input}</div>`;
-// }
 
-export { parseInput, txt, webUtils };
+interface IHandler {
+  "pId": string;
+  "pattern": string;
+  "func": (context: any, input: string) => Promise<{}>;
+  "live": boolean;
+  "usage": string;
+  "description": string;
+  "template": string;
+}
+
+type pluginType = (context: any, input: string) => Promise<{}> | undefined;
+
+export { parseInput, txt, webUtils, IHandler, pluginType };
 export default { parseInput, txt, webUtils };

@@ -6,12 +6,10 @@ module.exports = ({common}, s) => {
     const {input} = common.parseInput(s)
     if(whitelist.indexOf(input)!=-1) {
       execa(input).then(result => {
-        resolve({
-          output: common.txt(`<pre>${result.stdout}</pre>`)
-        });
-      }).catch(e => reject(e));
+        return resolve({ output: common.txt(`<pre>${result.stdout}</pre>`) });
+      }).catch(reject); // (e => reject(e));
     } else {
-      resolve({
+      return resolve({
         output: common.txt(`Please enter a command to execute. ` +
                            `The following commands are whitelisted:<br />` +
                            whitelist.join(', '))

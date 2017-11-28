@@ -5,6 +5,8 @@ import config from "../../config";
 import * as fse from "fs-extra";
 import * as path from "path";
 
+import {pluginType} from "../../common";
+
 interface IPluginCfg {
   command?: string;
   usage?: string;
@@ -18,8 +20,6 @@ interface IPluginCfg {
   readonly name: string;
   readonly version: string;
 }
-
-type pluginFunc = (context: any, input: string) => Promise<{}> | undefined;
 
 /**
  * Ensure repositories exist (created if necessary).
@@ -53,8 +53,8 @@ function getPluginPaths(): string[] {
  * @param  {string}   pluginPath File path to plugin
  * @return {Function}            Plugin module
  */
-function importPluginModule(pluginPath: string): pluginFunc {
-  let loadedPlugin: pluginFunc;
+function importPluginModule(pluginPath: string): pluginType {
+  let loadedPlugin: pluginType;
   try {
     loadedPlugin = require(pluginPath);
   } catch (e) {
@@ -109,7 +109,7 @@ function parsePluginConfig(pluginId: string, pluginPath: string): IPluginCfg {
  */
 function loadPlugins() {
   const pluginPaths = getPluginPaths();
-  const loadedPlugins: { [index: string]: pluginFunc } = {};
+  const loadedPlugins: { [index: string]: pluginType } = {};
   const loadedPluginConfigs: { [index: string]: IPluginCfg } = {};
   for (const pluginPath of pluginPaths) {
     const pluginId: string = path.basename(pluginPath);
@@ -128,4 +128,5 @@ function loadPlugins() {
   return {loadedPlugins, loadedPluginConfigs};
 }
 
-export { loadPlugins };
+// export { loadPlugins };
+export default {loadPlugins};
