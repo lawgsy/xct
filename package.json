@@ -15,7 +15,6 @@
     "dist": "gulp && electron-builder"
   },
   "devDependencies": {
-    "@types/es6-promise": "^0.0.33",
     "electron": "1.7.9",
     "electron-builder": "^19.45.5",
     "gulp": "^3.9.1",

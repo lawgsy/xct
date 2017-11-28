@@ -21,9 +21,11 @@ gulp.task('clean', function () {
              .pipe(clean());
 });
 
+var tsProject = ts.createProject('tsconfig.json', { noImplicitAny: false });
+
 gulp.task('typescript', [], function () {
   return gulp.src(`${bases.src}/**/*.ts`)
-             .pipe(ts({ noImplicitAny: false }))
+             .pipe(tsProject())
              .pipe(gulp.dest(bases.app));
 });
 
