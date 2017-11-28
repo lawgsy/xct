@@ -19,17 +19,26 @@ function txt(input: string) {
   return `<div class='text'>${input}</div>`;
 }
 
+type pluginType = (context: IContext) => Promise<{}>;
+
 interface IHandler {
   "pId": string;
   "pattern": string;
-  "func": (context: any, input: string) => Promise<{}>;
+  "func": pluginType;
   "live": boolean;
   "usage": string;
   "description": string;
   "template": string;
 }
+interface IContext {
+  vueObj: any;
+  common: any;
+  markdown: any;
+  parse: any;
+  handlers: IHandler[];
+  rawInput: string;
+  isSubmit: boolean|undefined;
+}
 
-type pluginType = (context: any, input: string) => Promise<{}> | undefined;
-
-export { parseInput, txt, webUtils, IHandler, pluginType };
+export { parseInput, txt, webUtils, IContext, IHandler, pluginType };
 export default { parseInput, txt, webUtils };

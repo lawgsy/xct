@@ -1,9 +1,9 @@
 const execa = require("execa");
 
-module.exports = ({common}, s) => {
+module.exports = ({common, rawInput}) => {
   return new Promise((resolve, reject) => {
     let whitelist = ['ipconfig', 'systeminfo', 'getmac'];
-    const {input} = common.parseInput(s)
+    const {input} = common.parseInput(rawInput)
     if(whitelist.indexOf(input)!=-1) {
       execa(input).then(result => {
         return resolve({ output: common.txt(`<pre>${result.stdout}</pre>`) });

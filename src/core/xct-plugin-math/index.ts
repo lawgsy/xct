@@ -18,14 +18,16 @@ math.import({
   derivative: () => { throw new Error("Function derivative is disabled"); },
 }, {override: true});
 
-function xctMath(_, s) {
+function xctMath({rawInput}) {
   return new Promise((resolve, reject) => {
     const allowedTypes = ["object", "number"];
     try {
-      const result = limitedEval(s.replace(/,/g, "."));
+      const result = limitedEval(rawInput.replace(/,/g, "."));
       const resultType = typeof result;
       if (allowedTypes.includes(resultType)) {
-        return resolve({ output: `<div class="text">${s} = ${result}</div>` });
+        return resolve({
+          output: `<div class="text">${rawInput} = ${result}</div>`,
+        });
       } else {
         return reject(Error(`Result of type '${typeof result}'`));
       }

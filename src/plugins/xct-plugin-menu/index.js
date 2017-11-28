@@ -2,8 +2,9 @@ const url = require('url')
 const path = require('path')
 
 module.exports =
-  ({vueObj, common}, ...args) => {
+  ({vueObj, common, rawInput}) => {
     let webview = common.webUtils.webViewRight;
+    let {input} = common.parseInput(rawInput);
     menuItems = [
       { id: "id-test", text: "hello",
         output: webview(url.format({
@@ -48,7 +49,7 @@ module.exports =
     </ul>
   </div>
   <div class="" style="padding-left:10px" id="cntnt">
-    ${common.txt("Content div.")}
+    ${common.txt("Content div.")} - input: ${input}
   </div>
 </div>`,
         bindings

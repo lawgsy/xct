@@ -1,5 +1,5 @@
 module.exports =
-  ({vueObj, common}, s) => {
+  ({vueObj, common}) => {
     vueObj.notify('Opening xkcd comic...');
     return new Promise((resolve, reject) => {
       return resolve({

@@ -1,10 +1,10 @@
 const QRCode = require('qrcode');
 
 module.exports =
-  ({_, common}, s) => {
+  ({_, common, rawInput}) => {
     // TODO: maybe add parameter saying whether command was manually executed or by realtime/live output
     return new Promise((resolve, reject) => {
-      var {input} = common.parseInput(s)
+      var {input} = common.parseInput(rawInput)
       if(input) {
         QRCode.toDataURL(input, (err, url) => {
           if(err) return reject(Error(err));

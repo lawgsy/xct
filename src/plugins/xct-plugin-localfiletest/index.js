@@ -2,7 +2,7 @@ const path = require('path')
 const url = require('url')
 
 module.exports =
-  ({vueObj, common}, ...args) => {
+  ({vueObj, common}) => {
     vueObj.notify('Opening local file...');
 
     return new Promise((resolve, reject) => {

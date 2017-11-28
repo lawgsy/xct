@@ -4,10 +4,10 @@ const url = require('url')
 const {clipboard} = require('electron')
 
 module.exports =
-  ({vueObj, common, parse}, s) => {
+  ({vueObj, common, parse, rawInput}) => {
     return new Promise((resolve, reject) => {
       // vueObj.notify('Executing figlet...')
-      var text = common.parseInput(s).input;
+      var text = common.parseInput(rawInput).input;
 
       // split into arguments, taking quotation marks into account
       var positionalArgs = parse(text)._;
@@ -33,7 +33,7 @@ module.exports =
         var font = positionalArgs.shift();
         if (figlet.fontsSync().indexOf(font) != -1) {
           // strip font from text (and quotation marks if present)
-          if(text[0]==`"`) text = text.substring(font.length+3, text.length);
+          if(text[0]=="\"") text = text.substring(font.length+3, text.length);
           else text = text.substring(font.length+1, text.length);
 
           return resolve({
@@ -42,7 +42,11 @@ module.exports =
         } else {
           var figletOutput = figlet.textSync(text);
           return resolve({
-            output: `<pre>${figletOutput}</pre><button id='copyText' class='btn btn-primary centered'>Copy to clipboard</button>`,
+            output: `
+<pre>${figletOutput}</pre>
+<button id='copyText' class='btn btn-primary centered'>
+  Copy to clipboard
+</button>`,
             bindings: {
               'copyText': {
                 evnt: 'click',

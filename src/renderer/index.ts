@@ -1,7 +1,7 @@
 "use strict";
 
 import common from "../common";
-import {IHandler} from "../common";
+import {IContext, IHandler} from "../common";
 import * as config from "./../config";
 
 import * as md from "markdown";
@@ -120,11 +120,11 @@ function unknownCommand(input) {
 const handlers: IHandler[] = [ {
     pId: "echo",
     pattern: "^echo .*",
-    func: (_, s: string) => {
+    func: (_) => {
       return new Promise((resolve, reject) => {
-        const {input} = common.parseInput(s);
+        const {input} = common.parseInput(context.rawInput);
         if (typeof input !== "undefined") {
-          resolve({output: input, bindings: {}});
+          resolve({output: input});
         } else {
           reject(Error("No parsable input"));
         }
@@ -138,13 +138,17 @@ const handlers: IHandler[] = [ {
   // 'figlet': (...args: string[]): string => figlet(...args),
   // 'xkcd': (...args: string[]): string => xkcd(context, ...args)
 ];
+const rawInput: string = "";
+let isSubmit: boolean|undefined;
 
-const context = {
+const context: IContext = {
   vueObj,
   common,
   markdown,
   parse,
   handlers,
+  rawInput,
+  isSubmit,
 };
 
 function commandList(): string {
@@ -186,7 +190,7 @@ function handlePromise(promise: any, pId: string, errFunc: (e) => void) {
   return true;
 }
 
-function handleCmd(input: string, isSubmit: boolean) {
+function handleCmd(input: string) {
   if (input === "") {
     vueObj.output = unknownCommand("");
     return;
@@ -194,15 +198,15 @@ function handleCmd(input: string, isSubmit: boolean) {
   let matched = false;
   for (const index in handlers) {
     if (input.match(handlers[index].pattern)) {
-      if (isSubmit || (!isSubmit && handlers[index].live)) {
-        const promise = handlers[index].func(context, input);
+      if (context.isSubmit || (!context.isSubmit && handlers[index].live)) {
+        const promise = handlers[index].func(context);
         handlePromise(promise, handlers[index].pId, (e) => new Error());
       }
       matched = true;
     }
   }
   if (!matched) {// && isSubmit) || input=="") {
-    const promise = xctMath(context, input);
+    const promise = xctMath(context);
     // (xctMath as (c, s) => Promise<{}>)
     handlePromise(promise, "xct-plugin-math", (e) => {
       // vueObj.output = unknownCommand(""); // unknownCommand(input)
@@ -218,13 +222,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const inputElement = document.getElementById("cmdInput");
   const submitElement = document.getElementById("submitBtn");
   const copyElement = document.getElementById("copyBtn");
-  let isSubmit: boolean;
+  // let isSubmit: boolean;
 
   // bind events
   if (inputElement) {
     inputElement.focus();
+    inputElement.oninput = (e) => {
+      context.rawInput = (inputElement as HTMLInputElement).value;
+    };
 
     inputElement.onkeypress = (e) => { // onkeyup
+      context.isSubmit = false;
       isSubmit = false;
       //   xctAutoComplete(context, input);
       // if (e === undefined) e = window.event as KeyboardEvent;
@@ -232,17 +240,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
       // const key = e.key;
       if (e.code === "Enter") { // 13enter
         isSubmit = true;
+        context.isSubmit = true;
       }
 
       // prevent submitting when selecting autocomplete by keyboard
       if (inputElement === document.activeElement)
-        handleInput(isSubmit);
+        handleInput();
       // e.preventDefault();
 
     };
 
     // update autocomplete after pressing backspace
     inputElement.onkeyup = (e) => { // onkeyup
+      context.isSubmit = false;
       isSubmit = false;
       // if (e === undefined) e = window.event as KeyboardEvent;
       // const keyCode = e.keyCode || e.which;
@@ -250,27 +260,27 @@ document.addEventListener("DOMContentLoaded", (event) => {
         return;
       } else if (e.code === "Escape") { // escape
         (inputElement as HTMLInputElement).value = "";
-        xctAutoComplete(context, "");
+        xctAutoComplete(context);
         vueObj.output = unknownCommand("");
       } else if (e.code === "Backspace") { // backspace
-        xctAutoComplete(context, (inputElement as HTMLInputElement).value);
-        handleInput(isSubmit);
+        xctAutoComplete(context);
+        handleInput();
         return true;
       } else {
-        handleInput(isSubmit);
-        xctAutoComplete(context, (inputElement as HTMLInputElement).value);
+        handleInput();
+        xctAutoComplete(context);
         return true;
       }
     };
   }
   if (submitElement)
-    submitElement.onclick = (e) => { handleInput(true); };
+    submitElement.onclick = (e) => { handleInput(); };
   context.vueObj.output = unknownCommand("");
 });
 
-function handleInput(isSubmit): void {
+function handleInput(): void {
   const inputElement = document.getElementById("cmdInput") as HTMLInputElement;
-  if (inputElement) handleCmd(inputElement.value, isSubmit);
+  if (inputElement) handleCmd(inputElement.value);
 }
 
 const {loadedPlugins, loadedPluginConfigs} = xctPluginManager.loadPlugins();

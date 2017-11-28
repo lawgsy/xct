@@ -48,7 +48,7 @@ Greeter.prototype.match = function match(regex, cb) {
 };
 
 module.exports =
-  ({vueObj, common}, s) => {
+  ({vueObj, common, rawInput}) => {
     vueObj.notify('Connecting to IRC...')
     vueObj.output = ""
 
