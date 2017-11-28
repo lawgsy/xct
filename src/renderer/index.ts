@@ -14,9 +14,7 @@ Vue.config.productionTip = false;
 
 import {clipboard} from "electron";
 
-import * as xctAutoComplete from "./../core/xct-plugin-autocomplete";
-import * as xctMath from "./../core/xct-plugin-math";
-import * as xctPluginManager from "./../core/xct-pluginmanager";
+import {xctAutoComplete, xctMath, xctPluginManager} from "./../core";
 
 const vueObj = new Vue({
     el: "#app",
