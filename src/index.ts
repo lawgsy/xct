@@ -53,7 +53,7 @@ function createWindow() {
     shell.openExternal(externalURL);
   }
   mainWindow.on("blur", () => {
-    if(!isDevelopment) hideMain();
+    if (!isDevelopment) hideMain();
   });
   mainWindow.once("ready-to-show", () => {
     showMain();
