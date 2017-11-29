@@ -1,0 +1,19 @@
+{
+  "name": "xct-plugin-process",
+  "version": "0.0.1",
+  "description": "Process management using [xps NPM package](https://www.npmjs.com/package/xps)",
+  "main": "index.js",
+  "author": "Lawg",
+  "license": "MIT",
+  "dependencies": {
+    "xps": "^1.0.2"
+  },
+  "xct": {
+    "command": "^process.*",
+    "usage": "**process** <list/kill <pId>/pkill <(partial) name>/help>",
+    "template": "process help",
+    "example_output": null,
+    "symbol": null,
+    "live": true
+  }
+}
