@@ -56,14 +56,21 @@ const vueObj = new Vue({
                               HTMLInputElement;
         if (inputElement) {
           const firstCmd = suggestion.template.split(" ")[0];
-          inputElement.value = suggestion.template.split(" ")[0];
+          inputElement.value = firstCmd;
 
           if (firstCmd !== suggestion.template)
             inputElement.value += " ";
 
+          handleInput();
           inputElement.focus();
           return false;
         }
+      },
+      setInput: (s) => {
+        (document.getElementById("cmdInput") as HTMLInputElement).value = s;
+        context.rawInput = s;
+        (document.getElementById("cmdInput") as HTMLInputElement).focus();
+        handleInput();
       },
     },
 
