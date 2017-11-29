@@ -75,16 +75,25 @@ html, body {margin:0;padding:0;height:100%;}
 input[type=text] {
   padding-top:10px;
 }
-.text {
+.txt {
   padding: 10px;
   top: 41px;
-  /* left: 0;
-  right: 0;
   bottom: 0;
   position: absolute;
-  width: 100%; */
+  width: 100%;
   overflow: auto;
   word-wrap: break-word;
+}
+.txt-right {
+  padding: 10px;
+}
+.pane-right {
+  position: absolute;
+  top: 41px;
+  right:0;
+  width:70%;
+  bottom:0;
+  float:left;
 }
 webview {
   /* background-color: #FFFFFF; */
@@ -99,12 +108,17 @@ webview {
   /* background-color: #FFFFFF; */
   /* color: #000000; */
   position: absolute;
-  /* top: 0; */
-  /* left: 0; */
-  left:50%;
-  width:50%;
-  /* right: 0; */
-  /* bottom: 0; */
+  top: 0;
+  width:100%;
+  right: 0;
+  bottom: 0;
+  padding:0;
+}
+.menu-div {
+  width:30%;
+}
+.menu {
+  margin-right: 1px;
 }
 p {
   display: inline;
@@ -146,15 +160,4 @@ pre {
   background-color: #E10023;
   border-color    : #E10023;
   color           : #FFFFFF;
-}
-.webview-right {
-  background-color: #FFFFFF;
-  color: #000000;
-  position: absolute;
-  top: 0;
-  /* left: 0; */
-  left:50%;
-  width:50%;
-  right: 0;
-  bottom: 0;
 }

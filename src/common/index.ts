@@ -16,7 +16,10 @@ function parseInput(input: string): {cmd: string, input: string} {
  * @return {string}       input string wrapped text div for output
  */
 function txt(input: string) {
-  return `<div class='text'>${input}</div>`;
+  return `<div class='txt'>${input}</div>`;
+}
+function txtRight(input: string) {
+ return `<div class='txt-right'>${input}</div>`;
 }
 
 type pluginType = (context: IContext) => Promise<{}>;
@@ -40,5 +43,5 @@ interface IContext {
   isSubmit: boolean|undefined;
 }
 
-export { parseInput, txt, webUtils, IContext, IHandler, pluginType };
-export default { parseInput, txt, webUtils };
+export { parseInput, txt, txtRight, webUtils, IContext, IHandler, pluginType };
+export default { parseInput, txt, txtRight, webUtils };

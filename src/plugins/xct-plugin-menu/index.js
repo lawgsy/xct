@@ -13,7 +13,7 @@ module.exports =
           slashes: true
         }))
       },
-      { id: "id-test2", text: "hello2", output: common.txt("bloop2")  },
+      { id: "id-test2", text: "hello2", output: common.txtRight("bloop2")  },
       { id: "id-google", text: "Google",
         output: webview("http://www.google.com/")
       },
@@ -39,18 +39,16 @@ module.exports =
     return new Promise((resolve, reject) => {
       return resolve({
         output: `
-<div class="text">
-  <div style="float:left;width:50%;">
-    <ul class="menu">
-      <!-- menu header text -->
-      <li class="divider" data-content="LINKS"></li>
-      <!-- menu item -->
-      ${menuHTML}
-    </ul>
-  </div>
-  <div class="" style="padding-left:10px" id="cntnt">
-    ${common.txt("Content div.")} - input: ${input}
-  </div>
+<div class="menu-div">
+  <ul class="menu">
+    <!-- menu header text -->
+    <li class="divider" data-content="LINKS"></li>
+    <!-- menu item -->
+    ${menuHTML}
+  </ul>
+</div>
+<div class="pane-right" id="cntnt">
+  ${common.txtRight("Content div. - input:" + input)}
 </div>`,
         bindings
       })

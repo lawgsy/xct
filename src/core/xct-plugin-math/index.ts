@@ -18,7 +18,7 @@ math.import({
   derivative: () => { throw new Error("Function derivative is disabled"); },
 }, {override: true});
 
-function xctMath({rawInput}) {
+function xctMath({common, rawInput}) {
   return new Promise((resolve, reject) => {
     const allowedTypes = ["object", "number"];
     try {
@@ -26,7 +26,7 @@ function xctMath({rawInput}) {
       const resultType = typeof result;
       if (allowedTypes.includes(resultType)) {
         return resolve({
-          output: `<div class="text">${rawInput} = ${result}</div>`,
+          output: common.txt(`${rawInput} = ${result}`),
         });
       } else {
         return reject(Error(`Result of type '${typeof result}'`));
