@@ -13,7 +13,7 @@ const markdown = md.markdown;
 Vue.config.devtools      = false;
 Vue.config.productionTip = false;
 
-import {clipboard} from "electron";
+import {clipboard, ipcRenderer} from "electron";
 import {xctAutoComplete, xctMath, xctPluginManager} from "./../core";
 
 const vueObj = new Vue({
@@ -262,6 +262,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         (inputElement as HTMLInputElement).value = "";
         xctAutoComplete(context);
         vueObj.output = unknownCommand("");
+        ipcRenderer.send("hide-window");
       } else if (e.code === "Backspace") { // backspace
         xctAutoComplete(context);
         handleInput();

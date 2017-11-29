@@ -1,9 +1,10 @@
 "use strict";
 
-import { app, BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, shell } from "electron";
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: Electron.BrowserWindow | null = null;
+let mainVisible = false;
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -18,7 +19,16 @@ reload(__dirname, {
 });
 
 function createWindow() {
-  mainWindow = new BrowserWindow({width: 800, height: 600, frame: false});
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    frame: false,
+    show: mainVisible,
+    skipTaskbar: true,
+    alwaysOnTop: true,
+
+  });
+  // mainWindow.setSkipTaskbar(true)
 
   const appEntryPage = url.format({
     pathname: path.join(__dirname, "index.html"),
@@ -42,13 +52,39 @@ function createWindow() {
     event.preventDefault();
     shell.openExternal(externalURL);
   }
-
+  mainWindow.on("blur", () => {
+    if(!isDevelopment) hideMain();
+  });
+  mainWindow.once("ready-to-show", () => {
+    showMain();
+  });
   mainWindow.webContents.on("new-window", handleRedirect);
   mainWindow.webContents.on("will-navigate", handleRedirect);
   mainWindow.webContents.on("devtools-opened", () => {
     mainWindow.webContents.focus();
   });
+
+  const ret = globalShortcut.register("CommandOrControl+`", () => {
+    mainVisible ? hideMain() : showMain();
+  });
 }
+
+function showMain() {
+  mainVisible = true;
+  mainWindow.focus();
+  mainWindow.show();
+}
+function hideMain() {
+  mainVisible = false;
+  mainWindow.blur();
+  mainWindow.hide();
+}
+ipcMain.on("hide-window", (event, arg) => {
+  hideMain();
+});
+ipcMain.on("show-window", (event, arg) => {
+  showMain();
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
